@@ -1,5 +1,12 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Dashboard</a>
+﻿<div class="top-row p-lg-4 navbar bg-dark shadow-sm">
+    <a class="navbar-bra text-white" href="">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard me-2 align-text-bottom" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <circle cx="12" cy="13" r="2"></circle>
+            <line x1="13.45" y1="11.55" x2="15.5" y2="9.5"></line>
+            <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
+        </svg>Dashboard
+    </a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,19 +14,19 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        <li class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+        <li class="nav-item">
+            <NavLink class="nav-link" href="config">
+                <span class="oi oi-cog" aria-hidden="true"></span> Configuration
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+        <li class="nav-item">
+            <NavLink class="nav-link" href="bugs">
+                <span class="oi oi-bug" aria-hidden="true"></span> Bugs
             </NavLink>
         </li>
     </ul>

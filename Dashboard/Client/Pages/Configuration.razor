@@ -1,0 +1,19 @@
+﻿@page "/config"
+
+<div>
+    <div class="card shadow">
+        <div class="card-body">
+            <EditForm Model="@this" OnValidSubmit="@OnValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="row mb-3">
+                    <label for="watcherDelayTime" class="col-sm-2 col-form-label flex-nowrap">Watcher delay time: </label>
+                    <div class="col-sm-1">
+                        <InputText id="watcherDelayTime" class="form-control" @bind-Value="WatcherWorkerDelayTime"></InputText>
+                        <ValidationMessage For="() => WatcherWorkerDelayTime"></ValidationMessage>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-dark">Update</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
