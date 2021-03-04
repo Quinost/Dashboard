@@ -16,9 +16,12 @@ namespace Dashboard.Server.Services.Workers
         public WatcherModel model;
         private TimeSpan delayTime;
 
+        //only for testing if client work properly
+        private int i = 0;
+
         public WatcherWorker(IHubContext<WatcherHub, IWatcherHub> _hub, WatcherHelper _helper)
         {
-            delayTime = TimeSpan.FromMinutes(3);
+            delayTime = TimeSpan.FromMinutes(1);
             hub = _hub;
             helper = _helper;
             helper.OnDoAction += Helper_OnDoAction;
@@ -37,11 +40,22 @@ namespace Dashboard.Server.Services.Workers
 
         private async ValueTask Work()
         {
-            model = new WatcherModel
+            //make error to test hub client
+            var model = new WatcherModel();
+            if(i == 3)
             {
-                StartTime = DateTime.Now,
-                Message = "Work"
-            };
+                model.StartTime = DateTime.Now;
+                model.Error = true;
+                model.ErrorTime = DateTime.Now;
+                model.Message = "Test error";
+                i = 0;
+            }
+            else
+            {
+                model.StartTime = DateTime.Now;
+                model.Message = "Work";
+                i++;
+            }
             await hub.Clients.All.WatcherStatus(model);
         }
 

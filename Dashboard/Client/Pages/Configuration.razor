@@ -6,7 +6,7 @@
             <EditForm Model="@this" OnValidSubmit="@OnValidSubmit">
                 <DataAnnotationsValidator />
                 <div class="row mb-3">
-                    <label for="watcherDelayTime" class="col-sm-2 col-form-label flex-nowrap">Watcher delay time: </label>
+                    <label for="watcherDelayTime" class="col-sm-2 col-form-label flex-nowrap">Watcher delay time in minutes: </label>
                     <div class="col-sm-1">
                         <InputText id="watcherDelayTime" class="form-control" @bind-Value="WatcherWorkerDelayTime"></InputText>
                         <ValidationMessage For="() => WatcherWorkerDelayTime"></ValidationMessage>

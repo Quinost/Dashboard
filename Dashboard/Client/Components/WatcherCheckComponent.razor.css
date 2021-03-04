@@ -1,0 +1,15 @@
+﻿body {
+}
+
+.watcher-check-margin{
+    margin-right:auto;
+}
+
+.span-good {
+    color:#e53935;
+    font-weight:bold;
+}
+.span-error {
+    color:#43a047;
+    font-weight:bold;
+}

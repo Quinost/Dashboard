@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+
+<div class="watcher-check-margin">
+    <span class="@(IsActive ? "span-error" : "span-good")">@Message</span>
+</div>
+
+@code {
+    private HubConnection hubConnection;
+    private bool IsActive { get; set; } = true;
+    private string Message { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager
+            .ToAbsoluteUri("/hubs/watcher"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.Reconnecting += (e) =>
+        {
+            IsActive = true;
+            Message = "Reconnecting";
+            return Task.CompletedTask;
+        };
+
+        hubConnection.On<WatcherModel>("WatcherStatus", (arg) =>
+        {
+            IsActive = !arg.Error;
+            if (IsActive)
+            {
+                Message = (arg.Message == string.Empty ? "Work" : arg.Message) + ", StartTime: " + arg.StartTime.ToString("dd/MM/yyyy HH:mm");
+            }
+            else
+            {
+                Message = arg.Message + ", Error time: " + arg.ErrorTime.ToString("dd/MM/yyyy HH:mm");
+            }
+            StateHasChanged();
+        });
+
+        while (true)
+        {
+            try
+            {
+                await hubConnection.StartAsync();
+                break;
+            }
+            catch
+            {
+                await Task.Delay(1000);
+            }
+        }
+    }
+}
