@@ -12,21 +12,19 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th>1</th>
-            <td>Message</td>
-            <td>System</td>
-            <td>@DateTime.Now</td>
-        </tr>
-        <tr>
-            <th>2</th>
-            <td>Message</td>
-            <td>System</td>
-            <td>@DateTime.Now</td>
-        </tr>
+        
+    <Virtualize ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="10">
+        <ItemContent>
+            <tr>
+                <td>@bug.Id</td>
+                <td>@bug.Message</td>
+                <td>@bug.System</td>
+                <td>@bug.Date</td>
+            </tr>
+        </ItemContent>
+        <Placeholder>
+            <p>Loading bugs...</p>
+        </Placeholder>
+    </Virtualize>
     </tbody>
 </table>
-
-@code {
-
-}

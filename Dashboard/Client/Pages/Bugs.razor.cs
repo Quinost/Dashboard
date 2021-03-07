@@ -1,12 +1,25 @@
-﻿using System;
+﻿using Dashboard.Client.Services;
+using Dashboard.Shared;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Dashboard.Client.Pages
 {
     public partial class Bugs
     {
-        //TODO: Virtual component
+        [Inject]
+        public BugsService bugService { get; set; }
+
+
+        private async ValueTask<ItemsProviderResult<BugModel>> LoadBugs(ItemsProviderRequest request)
+        {
+            var bugsList = await bugService.GetPaginatetBugs(request.StartIndex, request.Count);
+            return new ItemsProviderResult<BugModel>(bugsList, 500);
+        }
     }
 }

@@ -1,0 +1,56 @@
+﻿@page "/login"
+@model Dashboard.Server.Pages.LoginModel
+@{
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Error</title>
+    <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/login.css" rel="stylesheet" />
+</head>
+
+
+
+<body>
+    <div>
+        <div class="login-left-col shadow-lg bg-dark">
+            <div class="text-center text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard" width="256" height="256" viewBox="0 0 24 24" stroke-width="1.25" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <circle cx="12" cy="13" r="2"></circle>
+                    <line x1="13.45" y1="11.55" x2="15.5" y2="9.5"></line>
+                    <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
+                </svg>
+                <h1>Dashboard</h1>
+            </div>
+        </div>
+        <div class="login-right-col">
+            <div class="p-5">
+                <form id="account" method="post">
+                    <div class="form-group w-25">
+                        <label>User Name</label>
+                        <p><span asp-validation-for="Username" class="text-danger"></span></p>
+                        <input type="text" class="form-control shadow" placeholder="User Name" asp-for="Username">
+                    </div>
+                    <div class="form-group w-25">
+                        <label>Password</label>
+                        <p><span asp-validation-for="Password" class="text-danger"></span></p>
+                        <input type="password" class="form-control shadow" placeholder="Password" asp-for="Password">
+                    </div>
+                    <button type="submit" class="btn btn-dark mt-3 shadow">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+

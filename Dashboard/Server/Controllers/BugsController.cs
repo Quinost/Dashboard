@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dashboard.Server.Controllers
 {
@@ -11,12 +13,12 @@ namespace Dashboard.Server.Controllers
     public class BugsController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetBugs()
+        public IActionResult GetBugs([FromQuery] int startIndex, [FromQuery] int count)
         {
             //Dummy data
             var list = new List<BugModel>();
 
-            for(int i = 0; i < 100; i++)
+            for(int i = 0; i < 500; i++)
             {
                 list.Add(new BugModel
                 {
@@ -26,6 +28,8 @@ namespace Dashboard.Server.Controllers
                     Date = DateTime.Now
                 });
             }
+            list = list.OrderBy(x => x.Id).Skip(startIndex).Take(count).ToList();
+
             return Ok(list);
         }
     }

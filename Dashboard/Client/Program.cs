@@ -25,6 +25,7 @@ namespace Dashboard.Client
                 .AddHttpMessageHandler<ApiAuthorizationMessageHandler>();
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
             builder.Services.AddScoped<ConfigurationService>();
+            builder.Services.AddScoped<BugsService>();
 
             await builder.Build().RunAsync();
         }

@@ -1,0 +1,32 @@
+﻿body {
+    font-family: "Lato", sans-serif;
+}
+
+.login-left-col {
+    position: fixed;
+    /*background: #000;*/
+    min-width: 40%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-in-left {
+    text-align: center;
+    color: white;
+}
+
+.login-right-col {
+    position: fixed;
+    margin-left: 40%;
+    min-height: 100%;
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-in-right {
+    padding: 5%;
+}
