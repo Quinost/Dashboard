@@ -1,2 +1,9 @@
-﻿body {
+﻿.card-res {
+    width:18rem;
+    height:13rem;
+}
+.main-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around
 }
