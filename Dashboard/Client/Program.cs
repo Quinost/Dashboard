@@ -21,10 +21,11 @@ namespace Dashboard.Client
             builder.RootComponents.Add<App>("#app");
 
             //TODO: Add toast service
-
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ConfigurationService>();
             builder.Services.AddScoped<BugsService>();
+
+            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }

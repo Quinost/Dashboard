@@ -10,10 +10,15 @@ namespace Dashboard.Client.Pages
     {
         [Inject] 
         public ConfigurationService configurationService { get; set; }
+
+        [Inject]
+        public INotificationService notificationService { get; set; }
+
         private ConfigurationModel configurationModelTemp;
 
         [Range(0, int.MaxValue, ErrorMessage = "Enter valid integer number")]
         public string WatcherWorkerDelayTime { get; set; }
+
 
 
         protected override async Task OnInitializedAsync()
@@ -30,6 +35,7 @@ namespace Dashboard.Client.Pages
                 WatcherWorkerDelayTime = int.Parse(WatcherWorkerDelayTime)
             };
             await configurationService.UpdateConfiguration(confg);
+            notificationService.ShowNotification("Updated successfully");
             configurationModelTemp = await configurationService.GetConfiguration();
             StateHasChanged();
         }
