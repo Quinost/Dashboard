@@ -25,16 +25,16 @@ namespace Dashboard.Client.Components
             base.OnInitialized();
         }
 
-        internal void ShowToast(RenderFragment message)
+        internal void ShowToast(RenderFragment message, string type)
         {
             InvokeAsync(() =>
             {
-                var toast = new NotificationModel
+                var toast = new NotificationModel(Remove)
                 {
                     Id = Guid.NewGuid(),
                     Message = message,
+                    Type = type
                 };
-                toast.RemoveNotification += Remove;
                 Notifications.Add(toast);
                 StateHasChanged();
             });

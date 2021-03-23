@@ -4,7 +4,6 @@
 
 .login-left-col {
     position: fixed;
-    /*background: #000;*/
     min-width: 40%;
     min-height: 100%;
     display: flex;
@@ -14,7 +13,6 @@
 
 .login-in-left {
     text-align: center;
-    color: white;
 }
 
 .login-right-col {

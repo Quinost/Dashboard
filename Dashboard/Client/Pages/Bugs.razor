@@ -12,19 +12,19 @@
         </tr>
     </thead>
     <tbody>
-        
-    <Virtualize ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="10">
-        <ItemContent>
-            <tr>
-                <td>@bug.Id</td>
-                <td>@bug.Message</td>
-                <td>@bug.System</td>
-                <td>@bug.Date</td>
-            </tr>
-        </ItemContent>
-        <Placeholder>
-            <p>Loading bugs...</p>
-        </Placeholder>
-    </Virtualize>
+
+        <Virtualize ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="10">
+            <ItemContent>
+                <tr>
+                    <td><button type="button" class="btn btn-sm btn-outline-dark" @onclick=@(() => ShowModal(bug.Id))>@bug.Id</button></td>
+                    <td>@bug.Message</td>
+                    <td>@bug.System</td>
+                    <td>@bug.Date</td>
+                </tr>
+            </ItemContent>
+            <Placeholder>
+                <p>Loading bugs...</p>
+            </Placeholder>
+        </Virtualize>
     </tbody>
 </table>

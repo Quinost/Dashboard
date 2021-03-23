@@ -1,5 +1,4 @@
-﻿using Dashboard.Client.Components;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System;
 using System.Timers;
 
@@ -9,33 +8,44 @@ namespace Dashboard.Client.Services
     {
         void ShowNotification(string message);
         void ShowNotification(RenderFragment message);
-        event Action<RenderFragment> OnShow;
+        void ShowSuccessNotification(string message);
+        void ShowSuccessNotification(RenderFragment message);
+        void ShowErrorNotification(string message);
+        void ShowErrorNotification(RenderFragment message);
+
+        event Action<RenderFragment, string> OnShow;
     }
     public class NotificationService : INotificationService
     {
-        public event Action<RenderFragment> OnShow;
+        public event Action<RenderFragment, string> OnShow;
 
         public void ShowNotification(string message)
-        {
-            OnShow?.Invoke(builder => builder.AddContent(0, message));
-        }
-        public void ShowNotification(RenderFragment message)
-        {
-            OnShow.Invoke(message);
-        }
+            => OnShow?.Invoke(builder => builder.AddContent(0, message), "info");
+        public void ShowNotification(RenderFragment message) 
+            => OnShow?.Invoke(message, "info");
+        public void ShowSuccessNotification(string message) 
+            => OnShow?.Invoke(builder => builder.AddContent(0, message), "success");
+        public void ShowSuccessNotification(RenderFragment message)
+            => OnShow?.Invoke(builder => builder.AddContent(0, message), "success");
+        public void ShowErrorNotification(string message) 
+            => OnShow?.Invoke(builder => builder.AddContent(0, message), "error");
+        public void ShowErrorNotification(RenderFragment message) 
+            => OnShow?.Invoke(builder => builder.AddContent(0, message), "error");
     }
 
     internal class NotificationModel
     {
         public Guid Id { get; set; }
         public RenderFragment Message { get; set; }
+        public string Type { get; set; }
 
         public Action<Guid> RemoveNotification;
 
         private Timer timer;
 
-        public NotificationModel()
+        public NotificationModel(Action<Guid> remove)
         {
+            RemoveNotification = remove;
             timer = new Timer();
             timer.Interval = 8000;
             timer.Elapsed += TimerElapsed;

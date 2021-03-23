@@ -20,7 +20,6 @@ namespace Dashboard.Client.Pages
         public string WatcherWorkerDelayTime { get; set; }
 
 
-
         protected override async Task OnInitializedAsync()
         {
             configurationModelTemp = await configurationService.GetConfiguration();

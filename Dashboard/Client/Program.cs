@@ -25,6 +25,11 @@ namespace Dashboard.Client
             builder.Services.AddScoped<ConfigurationService>();
             builder.Services.AddScoped<BugsService>();
 
+            builder.Services.AddScoped<AuthStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+            
+
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();

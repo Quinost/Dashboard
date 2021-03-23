@@ -17,7 +17,7 @@ namespace Dashboard.Client.Services
             httpClient = _httpClient;
         }
         //TODO: Add
-        public async Task<IEnumerable<BugModel>> GetPaginatetBugs(int startIndex, int count)
+        public async Task<IEnumerable<BugModel>> GetPaginatedBugs(int startIndex, int count)
         {
             return await httpClient.GetFromJsonAsync<IEnumerable<BugModel>>($"api/bugs?startIndex={startIndex}&count={count}");
         }

@@ -15,5 +15,15 @@ namespace Dashboard.Client.Authentication
         {
             throw new NotImplementedException();
         }
+
+        public Task Login()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Logout()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

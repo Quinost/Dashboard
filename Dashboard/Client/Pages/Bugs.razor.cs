@@ -1,4 +1,5 @@
-﻿using Dashboard.Client.Services;
+﻿using Dashboard.Client.Components.Modals;
+using Dashboard.Client.Services;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
@@ -15,11 +16,14 @@ namespace Dashboard.Client.Pages
         [Inject]
         public BugsService bugService { get; set; }
 
-
         private async ValueTask<ItemsProviderResult<BugModel>> LoadBugs(ItemsProviderRequest request)
         {
-            var bugsList = await bugService.GetPaginatetBugs(request.StartIndex, request.Count);
+            var bugsList = await bugService.GetPaginatedBugs(request.StartIndex, request.Count);
             return new ItemsProviderResult<BugModel>(bugsList, 500);
+        }
+
+        private void ShowModal(int Id)
+        {
         }
     }
 }
