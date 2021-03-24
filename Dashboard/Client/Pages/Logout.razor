@@ -1,0 +1,11 @@
+﻿@page "/logout"
+@inject AccountService auth
+@attribute [Authorize]
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await auth.Logout();
+    }
+}

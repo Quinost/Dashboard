@@ -1,3 +1,9 @@
 {
   /*Empty default config*/
+  "JwtTokenConfig": {
+    "Secret": "Ultra_Secret_Key_dashboard",
+    "Issuer": "https://localhost",
+    "Audience": "https://localhost",
+    "AccessTokenExpiration": 480
+  }
 }

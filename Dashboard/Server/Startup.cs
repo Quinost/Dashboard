@@ -1,11 +1,17 @@
+using Dashboard.Server.Authentication;
+using Dashboard.Server.Authentication.JWT;
 using Dashboard.Server.Services.Helpers;
 using Dashboard.Server.Services.Hubs;
 using Dashboard.Server.Services.Workers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace Dashboard.Server
 {
@@ -20,11 +26,38 @@ namespace Dashboard.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            //TODO: Add JWTBearer Auth 
+            var jwtConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtConfig>();
+
+            //TODO: RoleStore
+            services.AddIdentityCore<UserModel>()
+                    .AddUserStore<UserStore>();
+
+            services.AddAuthentication(v =>
+            {
+                v.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                v.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(v =>
+            {
+                v.RequireHttpsMetadata = true;
+                v.SaveToken = true;
+                v.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = jwtConfig.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
+                    ValidAudience = jwtConfig.Audience,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+            services.AddScoped<JwtTokenGenerator>();
 
             services.AddSingleton<WatcherHelper>();
 
             services.AddHostedService<WatcherWorker>();
+            services.AddSingleton(jwtConfig);
 
             services.AddControllers();
             services.AddRazorPages();
@@ -51,6 +84,9 @@ namespace Dashboard.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

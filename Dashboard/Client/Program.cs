@@ -24,13 +24,17 @@ namespace Dashboard.Client
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<ConfigurationService>();
             builder.Services.AddScoped<BugsService>();
+            builder.Services.AddScoped<AccountService>();
 
-            builder.Services.AddScoped<AuthStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+            builder.Services.AddScoped<JwtStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, JwtStateProvider>(sp => sp.GetRequiredService<JwtStateProvider>());
 
-            
+            builder.Services.AddScoped<JwtMessageHandler>();
+            builder.Services.AddHttpClient("API", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)).AddHttpMessageHandler<JwtMessageHandler>();
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
+            builder.Services.AddAuthorizationCore();
 
-            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            //builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }

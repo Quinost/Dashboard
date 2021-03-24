@@ -1,5 +1,6 @@
 ﻿using Dashboard.Server.Services.Helpers;
 using Dashboard.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers
@@ -7,6 +8,7 @@ namespace Dashboard.Server.Controllers
     //TODO: Protect controller
     [Route("api/configuration")]
     [ApiController]
+    [Authorize]
     public class ConfigurationController : ControllerBase
     {
         private WatcherHelper helper;

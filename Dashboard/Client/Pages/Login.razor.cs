@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Dashboard.Client.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -14,36 +15,49 @@ namespace Dashboard.Client.Pages
         [Required]
         public string Password { get; set; }
 
-        [Inject]
-        private NavigationManager navManager { get; set; }
+        public string ErrorMessage { get; set; }
 
         private string returnUrl { get; set; }
 
-        /*
         [Inject]
-        private AuthStateProvider authState { get; set; }
-        */
+        private NavigationManager navManager { get; set; }
 
+        [Inject]
+        private AccountService authService { get; set; }
 
+        
         protected override async Task OnInitializedAsync()
         {
             var uri = navManager.ToAbsoluteUri(navManager.Uri);
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var _returnUrl))
                 returnUrl = _returnUrl.ToString();
 
-            /*
-            var authstate = await authState.GetAuthenticationStateAsync();
+            var authstate = await authService.GetAuthState();
             if (authstate.User.Identity.IsAuthenticated)
-                navManager.NavigateTo("/");*/
+                navManager.NavigateTo("/");
 
             await base.OnInitializedAsync();
         }
 
         public async Task OnValidLogin()
         {
-            Console.WriteLine(returnUrl);
-            navManager.NavigateTo("/");
-            await Task.CompletedTask;
+            ErrorMessage = string.Empty;
+            try
+            {
+                await authService.Login(Username, Password);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                StateHasChanged();
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(returnUrl))
+                navManager.NavigateTo(returnUrl);
+            else
+                navManager.NavigateTo("/");
+            await Task.CompletedTask; 
         }
     }
 }

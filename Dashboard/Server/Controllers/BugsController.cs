@@ -1,4 +1,5 @@
 ﻿using Dashboard.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Dashboard.Server.Controllers
     //TODO: Protect controller
     [Route("api/bugs")]
     [ApiController]
+    [Authorize]
     public class BugsController : ControllerBase
     {
         [HttpGet]

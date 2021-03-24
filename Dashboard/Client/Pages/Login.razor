@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @layout LoginLayout
+@attribute [AllowAnonymous]
 
 <div>
     <div class="login-left-col shadow-lg bg-dark">
@@ -29,7 +30,14 @@
                     <input type="password" class="form-control shadow" placeholder="Password" @bind-value="Password">
                 </div>
                 <button type="submit" class="btn btn-dark mt-3 shadow">Login</button>
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-danger w-25" role="alert">
+                        @ErrorMessage
+                    </div>
+                }
             </EditForm>
+            <p class="text-secondary">Username: Dashboard ; Password: securePassword</p>
         </div>
     </div>
 </div>
