@@ -27,7 +27,7 @@ namespace Dashboard.Client.Services
                 throw new Exception(await retVal.Content.ReadAsStringAsync());
             }
             var model = await retVal.Content.ReadFromJsonAsync<TokenModel>();
-            await authProvider.LoginToken(model.Token, model.Expiration);
+            await authProvider.LoginToken(model.Token);
         }
 
         public async Task Logout()
@@ -35,8 +35,5 @@ namespace Dashboard.Client.Services
 
         public async Task<AuthenticationState> GetAuthState()
             => await authProvider.GetAuthenticationStateAsync();
-
-        public async Task<string> GetToken()
-            => await authProvider.GetToken();
     }
 }

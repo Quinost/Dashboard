@@ -25,6 +25,7 @@ namespace Dashboard.Client
             builder.Services.AddScoped<ConfigurationService>();
             builder.Services.AddScoped<BugsService>();
             builder.Services.AddScoped<AccountService>();
+            builder.Services.AddTransient<ITokenProvider, TokenProvider>();
 
             builder.Services.AddScoped<JwtStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider, JwtStateProvider>(sp => sp.GetRequiredService<JwtStateProvider>());

@@ -1,73 +1,62 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Dashboard.Server.Context;
+using Dashboard.Server.Context.Entity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dashboard.Server.Authentication
 {
-    public class UserStore : IUserStore<UserModel>, IUserPasswordStore<UserModel>
+    public class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
     {
-        public readonly UserModel User;
+        private readonly DataContext context;
 
-        public UserStore()
+        public UserStore(DataContext _context)
         {
-            User = new UserModel
-            {
-                Id = Guid.NewGuid(),
-                Username = "Dashboard"
-            };
-            User.Password = new PasswordHasher<UserModel>().HashPassword(User, "securePassword");
+            context = _context;
         }
-        public Task<IdentityResult> CreateAsync(UserModel user, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
-
-        public Task<IdentityResult> DeleteAsync(UserModel user, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
 
         public void Dispose()
-        {
+            => context.Dispose();
 
-        }
+        public async Task<UserEntity> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) 
+            => await context.Users.FirstOrDefaultAsync(v => v.Username.ToUpper() == normalizedUserName);
 
-        public Task<UserModel> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<string> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken) 
+            => Task.FromResult(user.Password);
+
+        public Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<UserModel> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        {
-            if (normalizedUserName == User.Username.ToUpper())
-            {
-                return Task.FromResult(User);
-            }
-            return Task.FromResult<UserModel>(null);
-        }
-
-        public Task<string> GetNormalizedUserNameAsync(UserModel user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<string> GetPasswordHashAsync(UserModel user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.Password);
-        }
-
-        public Task<string> GetUserIdAsync(UserModel user, CancellationToken cancellationToken)
+        public Task<UserEntity> FindByIdAsync(string userId, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<string> GetUserNameAsync(UserModel user, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedUserNameAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<bool> HasPasswordAsync(UserModel user, CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task SetNormalizedUserNameAsync(UserModel user, string normalizedName, CancellationToken cancellationToken)
+        public Task<string> GetUserNameAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task SetPasswordHashAsync(UserModel user, string passwordHash, CancellationToken cancellationToken)
+        public Task<bool> HasPasswordAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task SetUserNameAsync(UserModel user, string userName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(UserEntity user, string normalizedName, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<IdentityResult> UpdateAsync(UserModel user, CancellationToken cancellationToken)
+        public Task SetPasswordHashAsync(UserEntity user, string passwordHash, CancellationToken cancellationToken)
+            => throw new NotImplementedException();
+
+        public Task SetUserNameAsync(UserEntity user, string userName, CancellationToken cancellationToken)
+            => throw new NotImplementedException();
+
+        public Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
     }
 }

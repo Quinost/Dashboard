@@ -1,11 +1,14 @@
 using Dashboard.Server.Authentication;
 using Dashboard.Server.Authentication.JWT;
+using Dashboard.Server.Context;
+using Dashboard.Server.Context.Entity;
 using Dashboard.Server.Services.Helpers;
 using Dashboard.Server.Services.Hubs;
 using Dashboard.Server.Services.Workers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,8 +31,10 @@ namespace Dashboard.Server
         {
             var jwtConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtConfig>();
 
+            services.AddDbContext<DataContext>(opts => opts.UseSqlite("Filename=DashboardDB.db"));
+
             //TODO: RoleStore
-            services.AddIdentityCore<UserModel>()
+            services.AddIdentityCore<UserEntity>()
                     .AddUserStore<UserStore>();
 
             services.AddAuthentication(v =>

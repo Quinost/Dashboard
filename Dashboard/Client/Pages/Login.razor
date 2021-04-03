@@ -18,7 +18,6 @@
         <div class="p-5">
             <EditForm Model="this" OnValidSubmit="OnValidLogin">
                 <DataAnnotationsValidator />
-                <!--<Microsoft.AspNetCore.Components.Forms.ValidationSummary />-->
                 <div class="form-group w-25">
                     <label>User Name</label>
                     <p><ValidationMessage For="@(() => this.Username)" /></p>
@@ -37,7 +36,7 @@
                     </div>
                 }
             </EditForm>
-            <p class="text-secondary">Username: Dashboard ; Password: securePassword</p>
+            <p class="text-secondary">Username: Dashboard ; Password: securePass</p>
         </div>
     </div>
 </div>

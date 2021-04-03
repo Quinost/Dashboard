@@ -1,5 +1,5 @@
-﻿using Dashboard.Server.Authentication;
-using Dashboard.Server.Authentication.JWT;
+﻿using Dashboard.Server.Authentication.JWT;
+using Dashboard.Server.Context.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +16,9 @@ namespace Dashboard.Server.Controllers
         public record UserQuery(string username, string password);
 
         private readonly JwtTokenGenerator jwtTokenGenerator;
-        private readonly UserManager<UserModel> userManager;
+        private readonly UserManager<UserEntity> userManager;
 
-        public AccountController(JwtTokenGenerator _jwtTokenGenerator, UserManager<UserModel> _userManager)
+        public AccountController(JwtTokenGenerator _jwtTokenGenerator, UserManager<UserEntity> _userManager)
         {
             jwtTokenGenerator = _jwtTokenGenerator;
             userManager = _userManager;
@@ -29,16 +29,23 @@ namespace Dashboard.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserQuery user)
         {
-            var userModel = await userManager.FindByNameAsync(user.username);
-            if (userModel is null)
-                return NotFound("User not found");
+            try
+            {
+                var userModel = await userManager.FindByNameAsync(user.username);
+                if (userModel is null)
+                    return NotFound("User not found");
 
-            var checkPassword = await userManager.CheckPasswordAsync(userModel, user.password);
-            if (!checkPassword)
-                return NotFound("Bad credentials");
+                var checkPassword = await userManager.CheckPasswordAsync(userModel, user.password);
+                if (!checkPassword)
+                    return NotFound("Wrong login or password");
 
-            var token = jwtTokenGenerator.GenerateToken(userModel.Username, DateTime.Now);
-            return Ok(token);
+                var token = jwtTokenGenerator.GenerateToken(userModel.Username);
+                return Ok(token);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
         }
     }
 }
