@@ -9,7 +9,7 @@ namespace Dashboard.Server.Controllers
 {
     [Route("api/bugs")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class BugsController : ControllerBase
     {
         private readonly BugService bugService;

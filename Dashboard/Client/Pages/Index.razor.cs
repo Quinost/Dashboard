@@ -13,7 +13,5 @@ namespace Dashboard.Client.Pages
             service.ShowSuccessNotification("Test success notification");
             service.ShowErrorNotification("Test error notification");
         }
-
-        public bool CosTam { get; set; }
     }
 }
