@@ -1,5 +1,6 @@
 ﻿using Dashboard.Server.Services.Helpers;
 using Dashboard.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@ namespace Dashboard.Server.Services.Hubs
     {
         Task WatcherStatus(WatcherModel status);
     }
+
+    [Authorize]
     public class WatcherHub : Hub<IWatcherHub>
     {
         private readonly WatcherHelper helper;

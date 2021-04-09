@@ -1,6 +1,7 @@
 ﻿using Dashboard.Client.Services;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Dashboard.Client.Pages
     public partial class Configuration
     {
         [Inject] 
-        public ConfigurationService configurationService { get; set; }
+        public IConfigurationService configurationService { get; set; }
 
         [Inject]
         public INotificationService notificationService { get; set; }
@@ -19,11 +20,14 @@ namespace Dashboard.Client.Pages
         [Range(0, int.MaxValue, ErrorMessage = "Enter valid integer number")]
         public string WatcherWorkerDelayTime { get; set; }
 
+        public string AccessTokenExpirationTime { get; set; }
+
 
         protected override async Task OnInitializedAsync()
         {
             configurationModelTemp = await configurationService.GetConfiguration();
             WatcherWorkerDelayTime = configurationModelTemp.WatcherWorkerDelayTime.ToString();
+            AccessTokenExpirationTime = configurationModelTemp.TokenExpirationTime.ToString();
             StateHasChanged();
         }
 
@@ -34,7 +38,7 @@ namespace Dashboard.Client.Pages
                 WatcherWorkerDelayTime = int.Parse(WatcherWorkerDelayTime)
             };
             await configurationService.UpdateConfiguration(confg);
-            notificationService.ShowNotification("Updated successfully");
+            notificationService.ShowNotification("Configuration updated successfully");
             configurationModelTemp = await configurationService.GetConfiguration();
             StateHasChanged();
         }

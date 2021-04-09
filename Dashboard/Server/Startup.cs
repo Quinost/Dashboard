@@ -2,6 +2,7 @@ using Dashboard.Server.Authentication;
 using Dashboard.Server.Authentication.JWT;
 using Dashboard.Server.Context;
 using Dashboard.Server.Context.Entity;
+using Dashboard.Server.Services;
 using Dashboard.Server.Services.Helpers;
 using Dashboard.Server.Services.Hubs;
 using Dashboard.Server.Services.Workers;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Dashboard.Server
 {
@@ -56,13 +58,28 @@ namespace Dashboard.Server
                     ValidAudience = jwtConfig.Audience,
                     ClockSkew = TimeSpan.Zero
                 };
+                v.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/hubs")))
+                            context.Token = accessToken;
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
             services.AddScoped<JwtTokenGenerator>();
+            services.AddScoped<BugService>();
 
             services.AddSingleton<WatcherHelper>();
+            services.AddSingleton(jwtConfig);
 
             services.AddHostedService<WatcherWorker>();
-            services.AddSingleton(jwtConfig);
 
             services.AddControllers();
             services.AddRazorPages();

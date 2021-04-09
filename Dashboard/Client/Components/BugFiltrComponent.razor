@@ -1,6 +1,6 @@
 ﻿<div class="dropdown">
     <button type="button" class="btn btn-outline-light btn-sm" @onclick="ToggleDropdown">
-        Filtr @if (true)
+        Filtr @if (!HasItems)
         {
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-filter-off" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -17,21 +17,18 @@
         }
     </button>
     <ul class="dropdown-menu dropdown-menu-dark @CssClass">
-        <li><a class="dropdown-item active" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#">Separated link</a></li>
+        <EditForm Model="this" OnValidSubmit="FiltrSubmit">
+            @foreach (var item in FilteringList)
+            {
+                var idString = "filtr-" + item.Id;
+                <li class="dropdown-item text-white">
+                    <InputCheckbox id="@idString" class="form-check-input" type="checkbox" @bind-Value="item.Value"></InputCheckbox>
+                    <label class="form-check-label" for="@idString">
+                        @item.Key
+                    </label>
+                </li>
+            }
+            <button class="btn btn-sm btn-dark" type="submit">Filtr</button>
+        </EditForm>
     </ul>
 </div>
-@code {
-    private bool showDropdown = false;
-
-    private string CssClass => showDropdown ? "show" : null;
-
-    private void ToggleDropdown()
-    {
-        showDropdown = !showDropdown;
-        StateHasChanged();
-    }
-}

@@ -1,37 +1,37 @@
-﻿using Dashboard.Shared;
+﻿using Dashboard.Server.Context.Entity;
+using Dashboard.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dashboard.Server.Controllers
 {
-    //TODO: Protect controller
     [Route("api/bugs")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class BugsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetBugs([FromQuery] int startIndex, [FromQuery] int count)
+        private readonly BugService bugService;
+
+        public BugsController(BugService _bugService)
         {
-            //Dummy data
-            var list = new List<BugModel>();
+            bugService = _bugService;
+        }
 
-            for(int i = 0; i < 500; i++)
+        [HttpGet]
+        public async Task<IActionResult> GetBugs([FromQuery] int startIndex, [FromQuery] int count)
+        {
+            try
             {
-                list.Add(new BugModel
-                {
-                    Id = i,
-                    Message = "Error number: " + i,
-                    System = "System number: " + i,
-                    Date = DateTime.Now
-                });
+                var bugs = await bugService.GetBugs(startIndex, count);
+                return Ok(bugs);
             }
-            list = list.OrderBy(x => x.Id).Skip(startIndex).Take(count).ToList();
-
-            return Ok(list);
+            catch(Exception ex)
+            {
+                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                return StatusCode(500);
+            }
         }
     }
 }

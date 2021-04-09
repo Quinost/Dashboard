@@ -1,5 +1,5 @@
 ﻿@inherits LayoutComponentBase
-@inject AccountService auth
+@inject IAccountService auth
 <AuthorizeView>
     <Authorized>
         <div class="page">
@@ -10,6 +10,7 @@
             <div class="main">
                 <div class="top-row px-4 bg-dark shadow text-white">
                     <WatcherCheckComponent />
+                    Hi @context.User.Identity.Name
                     <a @onclick="auth.Logout" target="_blank" class="ml-md-auto">Log out</a>
                 </div>
 

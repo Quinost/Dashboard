@@ -10,11 +10,12 @@ namespace Dashboard.Server.Authentication.JWT
     public class JwtTokenGenerator
     {
         private readonly JwtConfig jwtConfig;
+
         public JwtTokenGenerator(JwtConfig _jwtConfig)
         {
             jwtConfig = _jwtConfig;
         }
-        public TokenModel GenerateToken(string userName)
+        public string GenerateToken(string userName)
         {
             DateTime now = DateTime.UtcNow;
             var expiry = now.AddMinutes(jwtConfig.AccessTokenExpiration);
@@ -28,7 +29,7 @@ namespace Dashboard.Server.Authentication.JWT
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)), SecurityAlgorithms.HmacSha256Signature));
             var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new TokenModel { Token = generatedToken };
+            return generatedToken;
         }
     }
 }

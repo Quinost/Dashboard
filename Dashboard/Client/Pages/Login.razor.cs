@@ -23,7 +23,7 @@ namespace Dashboard.Client.Pages
         private NavigationManager navManager { get; set; }
 
         [Inject]
-        private AccountService authService { get; set; }
+        private IAccountService authService { get; set; }
 
         
         protected override async Task OnInitializedAsync()

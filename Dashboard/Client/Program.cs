@@ -20,19 +20,20 @@ namespace Dashboard.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            //TODO: Add toast service
             builder.Services.AddScoped<INotificationService, NotificationService>();
-            builder.Services.AddScoped<ConfigurationService>();
-            builder.Services.AddScoped<BugsService>();
-            builder.Services.AddScoped<AccountService>();
-            builder.Services.AddTransient<ITokenProvider, TokenProvider>();
+            builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
+            builder.Services.AddScoped<IBugsService, BugsService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 
             builder.Services.AddScoped<JwtStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider, JwtStateProvider>(sp => sp.GetRequiredService<JwtStateProvider>());
 
             builder.Services.AddScoped<JwtMessageHandler>();
-            builder.Services.AddHttpClient("API", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)).AddHttpMessageHandler<JwtMessageHandler>();
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));
+            builder.Services.AddHttpClient("API", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                .AddHttpMessageHandler<JwtMessageHandler>();
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>()
+                .CreateClient("API"));
             builder.Services.AddAuthorizationCore();
 
             //builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

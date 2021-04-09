@@ -5,7 +5,7 @@
     <thead class="table-dark">
         <tr>
             <th class="align-middle first-column">
-                <BugFiltrComponent></BugFiltrComponent>
+                <BugFiltrComponent Input="SystemList"  Output="((args) => FilterSelected(args)) "></BugFiltrComponent>
             </th>
             <th class="align-middle w-auto">Message</th>
             <th class="align-middle w-25">System</th>
@@ -13,8 +13,7 @@
         </tr>
     </thead>
     <tbody>
-
-        <Virtualize ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="10">
+        <Virtualize ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="20">
             <ItemContent>
                 <tr>
                     <td><button type="button" class="btn btn-sm btn-outline-dark" @onclick=@(() => ShowModal(bug.Id))>@bug.Id</button></td>

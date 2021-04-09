@@ -8,7 +8,13 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services
 {
-    public class AccountService
+    public interface IAccountService
+    {
+        Task<AuthenticationState> GetAuthState();
+        Task Login(string username, string password);
+        Task Logout();
+    }
+    public class AccountService : IAccountService
     {
         private readonly JwtStateProvider authProvider;
         private readonly HttpClient httpClient;
@@ -26,8 +32,8 @@ namespace Dashboard.Client.Services
             {
                 throw new Exception(await retVal.Content.ReadAsStringAsync());
             }
-            var model = await retVal.Content.ReadFromJsonAsync<TokenModel>();
-            await authProvider.LoginToken(model.Token);
+            var token = await retVal.Content.ReadAsStringAsync();
+            await authProvider.LoginToken(token);
         }
 
         public async Task Logout()

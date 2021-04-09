@@ -1,5 +1,6 @@
 ﻿using Dashboard.Server.Authentication.JWT;
 using Dashboard.Server.Context.Entity;
+using Dashboard.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,23 +11,25 @@ namespace Dashboard.Server.Controllers
 {
     [Route("auth")]
     [ApiController]
-    [AllowAnonymous]
     public class AccountController : ControllerBase
     {
         public record UserQuery(string username, string password);
 
         private readonly JwtTokenGenerator jwtTokenGenerator;
         private readonly UserManager<UserEntity> userManager;
+        private readonly BugService bugService;
 
-        public AccountController(JwtTokenGenerator _jwtTokenGenerator, UserManager<UserEntity> _userManager)
+        public AccountController(JwtTokenGenerator _jwtTokenGenerator, UserManager<UserEntity> _userManager, BugService _bugService)
         {
             jwtTokenGenerator = _jwtTokenGenerator;
             userManager = _userManager;
+            bugService = _bugService;
         }
 
 
         [Route("login")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserQuery user)
         {
             try
@@ -44,6 +47,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
+                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
                 return StatusCode(500);
             }
         }

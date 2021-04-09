@@ -1,29 +1,39 @@
-﻿using Dashboard.Server.Services.Helpers;
+﻿using Dashboard.Server.Authentication.JWT;
+using Dashboard.Server.Services.Helpers;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers
 {
-    //TODO: Protect controller
     [Route("api/configuration")]
     [ApiController]
     [Authorize]
     public class ConfigurationController : ControllerBase
     {
-        private WatcherHelper helper;
+        private readonly WatcherHelper helper;
+        private readonly JwtConfig config;
 
-        public ConfigurationController(WatcherHelper _helper)
+        public ConfigurationController(WatcherHelper _helper, JwtConfig _config)
         {
             helper = _helper;
+            config = _config;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            ConfigurationModel retVal = new ConfigurationModel();
-            retVal.WatcherWorkerDelayTime = helper.OnDelay(null);
-            return Ok(retVal);
+            try
+            {
+                ConfigurationModel retVal = new ConfigurationModel();
+                retVal.WatcherWorkerDelayTime = helper.OnDelay(null);
+                retVal.TokenExpirationTime = config.AccessTokenExpiration;
+                return Ok(retVal);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
