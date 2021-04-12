@@ -17,6 +17,8 @@ namespace Dashboard.Client.Pages
         private List<BugModel> BugsList { get; set; } = new List<BugModel>();
         private List<string> FiltrList { get; set; } = new List<string>();
 
+        private Virtualize<BugModel> ListVirtual { get; set; }
+
         private int TotalCount = 0;
 
         private async ValueTask<ItemsProviderResult<BugModel>> LoadBugs(ItemsProviderRequest request)
@@ -32,8 +34,6 @@ namespace Dashboard.Client.Pages
             return new ItemsProviderResult<BugModel>(bugs, totalCount);
         }
 
-        //TODO: Virtualize does not re render even if we call statehaschanged. You have to scroll down. To fix
-
         private async Task LoadMoreBugs()
         {
             var bugs = await bugService.GetPaginatedBugs(BugsList.Count(), 200);
@@ -48,10 +48,10 @@ namespace Dashboard.Client.Pages
         {
         }
 
-        public void FilterSelected(List<string> param)
+        public async void FilterSelected(List<string> param)
         {
             FiltrList = param;
-            StateHasChanged();
+            await ListVirtual.RefreshDataAsync();
         }
     }
 }
