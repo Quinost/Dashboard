@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Dashboard.Shared;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Dashboard.Client.Services
     {
         Task<string> GetToken();
         ValueTask RemoveToken();
-        ValueTask SetToken(string token);
+        ValueTask SetToken(TokenResult token);
         Task<IEnumerable<Claim>> GetParsedClaimsFromToken();
     }
     public class TokenProvider : ITokenProvider
@@ -36,11 +37,19 @@ namespace Dashboard.Client.Services
             return null;
         }
 
-        public async ValueTask SetToken(string token) 
-            => await jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
+        public async ValueTask SetToken(TokenResult token)
+        {
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token.AccessToken);
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshToken", token.RefreshToken);
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshTokenExpiry", token.RefreshTokenExpiry);
+        }
 
-        public async ValueTask RemoveToken() 
-            => await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
+        public async ValueTask RemoveToken()
+        {
+            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
+            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshToken");
+            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshTokenExpiry");
+        }
 
         public async Task<IEnumerable<Claim>> GetParsedClaimsFromToken()
         {

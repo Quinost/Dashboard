@@ -7,8 +7,8 @@ namespace Dashboard.Client.Services
 {
     public interface IConfigurationService
     {
-        ValueTask<ConfigurationModel> GetConfiguration();
-        ValueTask UpdateConfiguration(ConfigurationModel model);
+        Task<ConfigurationModel> GetConfiguration();
+        Task UpdateConfiguration(ConfigurationModel model);
     }
 
     public class ConfigurationService : IConfigurationService
@@ -19,12 +19,12 @@ namespace Dashboard.Client.Services
             httpClient = _httpClient;
         }
 
-        public async ValueTask<ConfigurationModel> GetConfiguration()
+        public async Task<ConfigurationModel> GetConfiguration()
         {
             return await httpClient.GetFromJsonAsync<ConfigurationModel>("/api/configuration");
         }
 
-        public async ValueTask UpdateConfiguration(ConfigurationModel model)
+        public async Task UpdateConfiguration(ConfigurationModel model)
         {
             var retVal = await httpClient.PostAsJsonAsync("/api/configuration", model);
         }

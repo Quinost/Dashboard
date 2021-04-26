@@ -1,6 +1,7 @@
-﻿using Dashboard.Server.Authentication.JWT;
-using Dashboard.Server.Context.Entity;
+﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Services;
+using Dashboard.Server.Services.Identity;
+using Dashboard.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +16,14 @@ namespace Dashboard.Server.Controllers
     {
         public record UserQuery(string username, string password);
 
-        private readonly JwtTokenGenerator jwtTokenGenerator;
-        private readonly UserManager<UserEntity> userManager;
         private readonly BugService bugService;
+        private readonly IdentityService identityService;
 
-        public AccountController(JwtTokenGenerator _jwtTokenGenerator, UserManager<UserEntity> _userManager, BugService _bugService)
+        public AccountController(UserManager<UserEntity> _userManager, BugService _bugService, IdentityService _identityService)
         {
-            jwtTokenGenerator = _jwtTokenGenerator;
             userManager = _userManager;
             bugService = _bugService;
+            identityService = _identityService;
         }
 
 
@@ -34,16 +34,47 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var userModel = await userManager.FindByNameAsync(user.username);
-                if (userModel is null)
-                    return NotFound("User not found");
+                var retVal = await identityService.Login(user.username, user.password);
+                if (retVal.Succeeded)
+                    return Ok(retVal.RetVal);
+                else
+                    return NotFound(retVal.ErrorToString());
+            }
+            catch (Exception ex)
+            {
+                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                return StatusCode(500);
+            }
+        }
+        [Route("logout")]
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await identityService.Logout(HttpContext.User.Identity?.Name);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                return StatusCode(500);
+            }
+        }
 
-                var checkPassword = await userManager.CheckPasswordAsync(userModel, user.password);
-                if (!checkPassword)
-                    return NotFound("Wrong login or password");
-
-                var token = jwtTokenGenerator.GenerateToken(userModel.Username);
-                return Ok(token);
+        [Route("refresh")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Refresh([FromBody]RefreshTokenRequest request)
+        {
+            try
+            {
+                var retVal = await identityService.RefreshToken(request);
+                if (retVal.Succeeded)
+                    return Ok(retVal.RetVal);
+                else
+                    return BadRequest(retVal.ErrorToString());
             }
             catch (Exception ex)
             {

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Dashboard.Infrastructure\Dashboard.Infrastructure.csproj" />
     <ProjectReference Include="..\Client\Dashboard.Client.csproj" />
     <ProjectReference Include="..\Shared\Dashboard.Shared.csproj" />
   </ItemGroup>

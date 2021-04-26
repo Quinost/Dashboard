@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dashboard.Server.Context.Entity
+namespace Dashboard.Infrastructure.Entity
 {
     public class BugEntity
     {

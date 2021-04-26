@@ -1,12 +1,12 @@
-﻿using Dashboard.Server.Context;
-using Dashboard.Server.Context.Entity;
+﻿using Dashboard.Infrastructure;
+using Dashboard.Infrastructure.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Dashboard.Server.Authentication
+namespace Dashboard.Server.Services.Identity
 {
     public class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>
     {
@@ -26,6 +26,20 @@ namespace Dashboard.Server.Authentication
         public Task<string> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken) 
             => Task.FromResult(user.Password);
 
+        public async Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
+        {
+            try
+            {
+                context.Users.Update(user);
+                await context.SaveChangesAsync();
+                return IdentityResult.Success;
+            }
+            catch(Exception ex)
+            {
+                return IdentityResult.Failed(new IdentityError() { Description = ex.Message });
+            }     
+        }
+
         public Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
@@ -39,16 +53,20 @@ namespace Dashboard.Server.Authentication
             => throw new NotImplementedException();
 
         public Task<string> GetUserIdAsync(UserEntity user, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
+        {
+            return Task.FromResult(user.Id.ToString());
+        }
 
         public Task<string> GetUserNameAsync(UserEntity user, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
+        {
+            return Task.FromResult(user.Username);
+        }
 
         public Task<bool> HasPasswordAsync(UserEntity user, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
         public Task SetNormalizedUserNameAsync(UserEntity user, string normalizedName, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
+            => Task.CompletedTask;
 
         public Task SetPasswordHashAsync(UserEntity user, string passwordHash, CancellationToken cancellationToken)
             => throw new NotImplementedException();
@@ -56,7 +74,12 @@ namespace Dashboard.Server.Authentication
         public Task SetUserNameAsync(UserEntity user, string userName, CancellationToken cancellationToken)
             => throw new NotImplementedException();
 
-        public Task<IdentityResult> UpdateAsync(UserEntity user, CancellationToken cancellationToken)
-            => throw new NotImplementedException();
+
+        public async Task SetIsActive(UserEntity user, bool isActive)
+        {
+            user.IsActive = isActive;
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+        }
     }
 }

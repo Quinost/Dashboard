@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Dashboard.Server.Context.Entity
+namespace Dashboard.Core.Entity
 {
     public class UserEntity
     {

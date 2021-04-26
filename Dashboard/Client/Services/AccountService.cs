@@ -32,13 +32,15 @@ namespace Dashboard.Client.Services
             {
                 throw new Exception(await retVal.Content.ReadAsStringAsync());
             }
-            var token = await retVal.Content.ReadAsStringAsync();
+            var token = await retVal.Content.ReadFromJsonAsync<TokenResult>();
             await authProvider.LoginToken(token);
         }
 
         public async Task Logout()
-            => await authProvider.LogoutToken();
-
+        {
+            await httpClient.PostAsync("auth/logout", null);
+            await authProvider.LogoutToken();
+        }
         public async Task<AuthenticationState> GetAuthState()
             => await authProvider.GetAuthenticationStateAsync();
     }

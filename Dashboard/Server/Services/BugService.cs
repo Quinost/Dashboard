@@ -1,11 +1,11 @@
-﻿using Dashboard.Server.Context;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Dashboard.Server.Context.Entity;
-using System.Collections.Generic;
 using System;
 using Dashboard.Shared;
+using Dashboard.Infrastructure;
+using Dashboard.Infrastructure.Entity;
+using Dashboard.Server.Models;
 
 namespace Dashboard.Server.Services
 {
@@ -18,11 +18,11 @@ namespace Dashboard.Server.Services
             context = _context;
         }
 
-        public async Task<BugsWithTotalCountModel> GetBugs(int startIndex, int count)
+        public async Task<Result<BugsWithTotalCountModel>> GetBugs(int startIndex, int count)
         {
-            var retVal = new BugsWithTotalCountModel();
             try
             {
+                var retVal = new BugsWithTotalCountModel();
                 retVal.Bugs = (await context.Bugs
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
@@ -30,12 +30,13 @@ namespace Dashboard.Server.Services
                     .AsNoTracking()
                     .ToListAsync()).ToBugModel();
                 retVal.TotalCount = await context.Bugs.CountAsync();
+                return Result<BugsWithTotalCountModel>.Success(retVal);
             }
             catch (Exception ex)
             {
                 await SaveBug(new BugEntity {  Message = ex.Message, System = "CORE API" });
+                return Result<BugsWithTotalCountModel>.Failed(ex.Message);
             }
-            return retVal;
         }
 
         public async Task SaveBug(BugEntity model)

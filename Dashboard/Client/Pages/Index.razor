@@ -3,10 +3,14 @@
 
 
 <div class="main-container">
-    <button @onclick="Show" class="btn btn-primary">Test Notification</button>
+    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
+        <div class="card-body">
+            <button @onclick="Show" class="btn btn-primary">Test Notification</button>
+        </div>
+    </div>
     <div class="card text-dark bg-light mb-3 shadow rounded card-res">
         <div class="card-body">
-            <h5 class="card-title">Light card title</h5>
+            <h5 class="card-title">Dark card title</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
     </div>
@@ -28,28 +32,14 @@
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
     </div>
-    <div class="card text-dark bg-light mb-3 shadow rounded card-res">
+    <div class="card text-dark bg-light mb-3 shadow rounded chart-card-res">
         <div class="card-body">
-            <h5 class="card-title">Light card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <Dashboard.Client.Components.Charts.PieChart></Dashboard.Client.Components.Charts.PieChart>
         </div>
     </div>
-    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
+    <div class="card text-white bg-dark mb-3 shadow rounded chart-card-res">
         <div class="card-body">
-            <h5 class="card-title">Dark card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-dark bg-light mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Light card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Dark card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <Dashboard.Client.Components.Charts.PieChart></Dashboard.Client.Components.Charts.PieChart>
         </div>
     </div>
 </div>

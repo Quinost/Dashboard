@@ -1,4 +1,5 @@
 ﻿using Dashboard.Client.Services;
+using Dashboard.Shared;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Security.Claims;
@@ -20,7 +21,7 @@ namespace Dashboard.Client.Authentication
             var identity = claims is null ? new ClaimsIdentity() : new ClaimsIdentity(claims, "jwt");
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
-        public async Task LoginToken(string token)
+        public async Task LoginToken(TokenResult token)
         {
             await tokenProvider.SetToken(token);
             var claims = await tokenProvider.GetParsedClaimsFromToken();

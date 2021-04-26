@@ -1,4 +1,4 @@
-﻿using Dashboard.Server.Context.Entity;
+﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Shared;
 using System.Collections.Generic;
 using System.Linq;

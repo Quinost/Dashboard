@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Dashboard.Server.Authentication.JWT
+namespace Dashboard.Server.Services.Identity
 {
     public class JwtConfig
     {
@@ -15,5 +15,8 @@ namespace Dashboard.Server.Authentication.JWT
 
         [JsonPropertyName("AccessTokenExpiration")]
         public int AccessTokenExpiration { get; set; }
+
+        [JsonPropertyName("refreshTokenExpiration")]
+        public int RefreshTokenExpiration { get; set; }
     }
 }

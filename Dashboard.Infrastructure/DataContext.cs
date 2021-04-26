@@ -1,14 +1,14 @@
-﻿using Dashboard.Server.Context.Entity;
+﻿using Dashboard.Infrastructure.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
-namespace Dashboard.Server.Context
+namespace Dashboard.Infrastructure
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions options ) : base(options)
+        public DataContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -45,7 +45,8 @@ namespace Dashboard.Server.Context
             var defaultUser = new UserEntity
             {
                 Id = Guid.NewGuid(),
-                Username = "Dashboard"
+                Username = "Dashboard",
+                IsActive = true
             };
             defaultUser.Password = new PasswordHasher<UserEntity>().HashPassword(defaultUser, "securePass");
             modelBuilder.Entity<UserEntity>().HasData(defaultUser);

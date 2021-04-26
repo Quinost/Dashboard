@@ -17,7 +17,7 @@ namespace Dashboard.Client.Pages
         private List<BugModel> BugsList { get; set; } = new List<BugModel>();
         private List<string> FiltrList { get; set; } = new List<string>();
 
-        private Virtualize<BugModel> ListVirtual { get; set; }
+        private Virtualize<BugModel> Virtualize { get; set; }
 
         private int TotalCount = 0;
 
@@ -51,7 +51,7 @@ namespace Dashboard.Client.Pages
         public async void FilterSelected(List<string> param)
         {
             FiltrList = param;
-            await ListVirtual.RefreshDataAsync();
+            await Virtualize.RefreshDataAsync();
         }
     }
 }

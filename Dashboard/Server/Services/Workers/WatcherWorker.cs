@@ -38,7 +38,7 @@ namespace Dashboard.Server.Services.Workers
         private async void Helper_OnDoAction()
             => await Work();
 
-        private async ValueTask Work()
+        private async Task Work()
         {
             //make error to test hub client
             var model = new WatcherModel();

@@ -1,22 +1,16 @@
-using Dashboard.Server.Authentication;
-using Dashboard.Server.Authentication.JWT;
-using Dashboard.Server.Context;
-using Dashboard.Server.Context.Entity;
+using Dashboard.Server.Extensions;
 using Dashboard.Server.Services;
 using Dashboard.Server.Services.Helpers;
 using Dashboard.Server.Services.Hubs;
 using Dashboard.Server.Services.Workers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
-using System.Threading.Tasks;
+using Dashboard.Infrastructure;
+using Dashboard.Server.Services.Identity;
 
 namespace Dashboard.Server
 {
@@ -35,45 +29,11 @@ namespace Dashboard.Server
 
             services.AddDbContext<DataContext>(opts => opts.UseSqlite("Filename=DashboardDB.db"));
 
-            //TODO: RoleStore
-            services.AddIdentityCore<UserEntity>()
-                    .AddUserStore<UserStore>();
+            //TODO: RoleStore\
+            services.AddIdentityWithStore();
+            services.AddJwtBearerToken(jwtConfig);
 
-            services.AddAuthentication(v =>
-            {
-                v.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                v.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(v =>
-            {
-                v.RequireHttpsMetadata = true;
-                v.SaveToken = true;
-                v.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidIssuer = jwtConfig.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
-                    ValidAudience = jwtConfig.Audience,
-                    ClockSkew = TimeSpan.Zero
-                };
-                v.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
-
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/hubs")))
-                            context.Token = accessToken;
-
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-
-            services.AddScoped<JwtTokenGenerator>();
+            services.AddScoped<IdentityService>();
             services.AddScoped<BugService>();
 
             services.AddSingleton<WatcherHelper>();

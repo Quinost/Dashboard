@@ -1,4 +1,4 @@
-﻿using Dashboard.Server.Context.Entity;
+﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,10 @@ namespace Dashboard.Server.Controllers
             try
             {
                 var bugs = await bugService.GetBugs(startIndex, count);
-                return Ok(bugs);
+                if (bugs.Succeeded)
+                    return Ok(bugs.RetVal);
+                else
+                    return NotFound(bugs.ErrorToString());
             }
             catch(Exception ex)
             {

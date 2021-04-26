@@ -1,5 +1,5 @@
-﻿using Dashboard.Server.Authentication.JWT;
-using Dashboard.Server.Services.Helpers;
+﻿using Dashboard.Server.Services.Helpers;
+using Dashboard.Server.Services.Identity;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
