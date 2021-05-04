@@ -1,20 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Dashboard.Client.Services.Interfaces;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Timers;
 
 namespace Dashboard.Client.Services
 {
-    public interface INotificationService
-    {
-        void ShowNotification(string message);
-        void ShowNotification(RenderFragment message);
-        void ShowSuccessNotification(string message);
-        void ShowSuccessNotification(RenderFragment message);
-        void ShowErrorNotification(string message);
-        void ShowErrorNotification(RenderFragment message);
-
-        event Action<RenderFragment, string> OnShow;
-    }
     public class NotificationService : INotificationService
     {
         public event Action<RenderFragment, string> OnShow;

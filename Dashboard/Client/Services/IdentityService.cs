@@ -1,5 +1,7 @@
 ﻿using Dashboard.Client.Authentication;
+using Dashboard.Client.Services.Interfaces;
 using Dashboard.Shared;
+using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Net.Http;
@@ -8,18 +10,12 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services
 {
-    public interface IAccountService
-    {
-        Task<AuthenticationState> GetAuthState();
-        Task Login(string username, string password);
-        Task Logout();
-    }
-    public class AccountService : IAccountService
+    public class IdentityService : IIdentityService
     {
         private readonly JwtStateProvider authProvider;
         private readonly HttpClient httpClient;
 
-        public AccountService(JwtStateProvider _authProvider, HttpClient _httpClient)
+        public IdentityService(JwtStateProvider _authProvider, HttpClient _httpClient)
         {
             authProvider = _authProvider;
             httpClient = _httpClient;

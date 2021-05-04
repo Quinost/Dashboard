@@ -15,7 +15,7 @@
     {
         hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager
-            .ToAbsoluteUri("/hubs/watcher"), opts => { opts.AccessTokenProvider = TokenProvider.GetToken; })
+            .ToAbsoluteUri("/hubs/watcher"), opts => { opts.AccessTokenProvider = TokenProvider.GetAccessToken; })
             .WithAutomaticReconnect()
             .Build();
 

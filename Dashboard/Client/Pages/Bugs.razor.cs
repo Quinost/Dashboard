@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web.Virtualization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Dashboard.Client.Services.Interfaces;
 
 namespace Dashboard.Client.Pages
 {

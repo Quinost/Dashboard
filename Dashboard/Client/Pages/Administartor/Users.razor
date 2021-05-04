@@ -1,0 +1,29 @@
+﻿@page "/users"
+
+<table class="table table-hover shadow">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col" class="username-cell">Username</th>
+            <th scope="col">PasswordHash</th>
+            <th scope="col" class="isActive-cell">IsActive</th>
+            <th scope="col">Role</th>
+            <th scope="col">Refresh token</th>
+            <th scope="col">Refresh token expiry</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in UserList)
+        {
+            <tr>
+                <th scope="row">@user.Id</th>
+                <td>@user.Username</td>
+                <td class="text-truncate">@user.PasswordHash</td>
+                <td>@user.IsActive</td>
+                <td>@RoleList.FirstOrDefault(v => v.Id == user.RoleId)?.Name</td>
+                <td class="text-truncate">@user.RefreshToken</td>
+                <td>@user.RefreshTokenExpiry</td>
+            </tr>
+        }
+    </tbody>
+</table>

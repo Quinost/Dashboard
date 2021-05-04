@@ -1,5 +1,7 @@
 ﻿using Dashboard.Client.Services;
+using Dashboard.Client.Services.Interfaces;
 using Dashboard.Shared;
+using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Security.Claims;

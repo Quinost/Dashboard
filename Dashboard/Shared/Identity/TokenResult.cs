@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dashboard.Shared
+namespace Dashboard.Shared.Identity
 {
     public class TokenResult
     {

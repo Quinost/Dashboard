@@ -1,4 +1,5 @@
 ﻿using Dashboard.Client.Services;
+using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using System;
@@ -23,15 +24,11 @@ namespace Dashboard.Client.Pages
         private NavigationManager navManager { get; set; }
 
         [Inject]
-        private IAccountService authService { get; set; }
+        private IIdentityService authService { get; set; }
 
         
         protected override async Task OnInitializedAsync()
         {
-            var uri = navManager.ToAbsoluteUri(navManager.Uri);
-            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var _returnUrl))
-                returnUrl = _returnUrl.ToString();
-
             var authstate = await authService.GetAuthState();
             if (authstate.User.Identity.IsAuthenticated)
                 navManager.NavigateTo("/");

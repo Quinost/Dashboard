@@ -1,4 +1,5 @@
 ﻿using Dashboard.Client.Services;
+using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -20,7 +21,7 @@ namespace Dashboard.Client.Authentication
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var token = await tokenProvider.GetToken();
+            var token = await tokenProvider.GetAccessToken();
 
             request.Headers.Authorization = new AuthenticationHeaderValue("bearer", token);
 

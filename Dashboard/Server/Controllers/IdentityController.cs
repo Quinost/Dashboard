@@ -1,9 +1,8 @@
 ﻿using Dashboard.Infrastructure.Entity;
-using Dashboard.Server.Services;
-using Dashboard.Server.Services.Identity;
+using Dashboard.Server.Services.Interfaces;
 using Dashboard.Shared;
+using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -12,16 +11,15 @@ namespace Dashboard.Server.Controllers
 {
     [Route("auth")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class IdentityController : ControllerBase
     {
         public record UserQuery(string username, string password);
 
-        private readonly BugService bugService;
-        private readonly IdentityService identityService;
+        private readonly IBugService bugService;
+        private readonly IIdentityService identityService;
 
-        public AccountController(UserManager<UserEntity> _userManager, BugService _bugService, IdentityService _identityService)
+        public IdentityController(IBugService _bugService, IIdentityService _identityService)
         {
-            userManager = _userManager;
             bugService = _bugService;
             identityService = _identityService;
         }
@@ -42,7 +40,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                await bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -58,7 +56,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                await bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -66,7 +64,7 @@ namespace Dashboard.Server.Controllers
         [Route("refresh")]
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Refresh([FromBody]RefreshTokenRequest request)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
             try
             {
@@ -78,7 +76,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                await bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }

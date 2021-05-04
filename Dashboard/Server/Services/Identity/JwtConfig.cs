@@ -16,7 +16,7 @@ namespace Dashboard.Server.Services.Identity
         [JsonPropertyName("AccessTokenExpiration")]
         public int AccessTokenExpiration { get; set; }
 
-        [JsonPropertyName("refreshTokenExpiration")]
+        [JsonPropertyName("RefreshTokenExpiration")]
         public int RefreshTokenExpiration { get; set; }
     }
 }

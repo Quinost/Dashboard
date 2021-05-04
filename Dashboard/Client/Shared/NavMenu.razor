@@ -20,15 +20,22 @@
             </NavLink>
         </li>
         <li class="nav-item">
-            <NavLink class="nav-link" href="config">
-                <span class="oi oi-cog" aria-hidden="true"></span> Configuration
-            </NavLink>
-        </li>
-        <li class="nav-item">
             <NavLink class="nav-link" href="bugs">
                 <span class="oi oi-bug" aria-hidden="true"></span> Bugs
             </NavLink>
         </li>
+        <AuthorizeView Roles="Administrator">
+            <li class="nav-item">
+                <NavLink class="nav-link" href="users">
+                    <span class="oi oi-people" aria-hidden="true"></span> Users
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="config">
+                    <span class="oi oi-cog" aria-hidden="true"></span> Configuration
+                </NavLink>
+            </li>
+        </AuthorizeView>
     </ul>
 </div>
 

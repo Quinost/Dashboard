@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Dashboard.Infrastructure;
 using Dashboard.Server.Services.Identity;
+using Dashboard.Server.Services.Interfaces;
 
 namespace Dashboard.Server
 {
@@ -33,8 +34,9 @@ namespace Dashboard.Server
             services.AddIdentityWithStore();
             services.AddJwtBearerToken(jwtConfig);
 
-            services.AddScoped<IdentityService>();
-            services.AddScoped<BugService>();
+            services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IBugService, BugService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddSingleton<WatcherHelper>();
             services.AddSingleton(jwtConfig);
@@ -72,7 +74,6 @@ namespace Dashboard.Server
 
             app.UseEndpoints(endpoints =>
             {
-                //TODO: Authentication
                 endpoints.MapHub<WatcherHub>("/hubs/watcher");
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();

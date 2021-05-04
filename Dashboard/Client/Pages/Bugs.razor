@@ -17,7 +17,7 @@
             <ItemContent>
                 <tr>
                     <td><button type="button" class="btn btn-sm btn-outline-dark" @onclick=@(() => ShowModal(bug.Id))>@bug.Id</button></td>
-                    <td>@bug.Message</td>
+                    <td class="text-break">@bug.Message</td>
                     <td>@bug.System</td>
                     <td>@bug.Date</td>
                 </tr>

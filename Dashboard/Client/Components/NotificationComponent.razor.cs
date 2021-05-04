@@ -1,4 +1,5 @@
 ﻿using Dashboard.Client.Services;
+using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;

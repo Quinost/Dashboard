@@ -49,6 +49,9 @@ a, .btn-link {
         top: 0.5rem;
     }
 
+.table {
+    table-layout: fixed;
+}
 .sk-wave-container {
     display: flex;
     justify-content: center;

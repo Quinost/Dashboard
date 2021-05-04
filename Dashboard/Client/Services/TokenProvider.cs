@@ -1,4 +1,6 @@
-﻿using Dashboard.Shared;
+﻿using Dashboard.Client.Services.Interfaces;
+using Dashboard.Shared;
+using Dashboard.Shared.Identity;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -9,21 +11,15 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services
 {
-    public interface ITokenProvider
-    {
-        Task<string> GetToken();
-        ValueTask RemoveToken();
-        ValueTask SetToken(TokenResult token);
-        Task<IEnumerable<Claim>> GetParsedClaimsFromToken();
-    }
     public class TokenProvider : ITokenProvider
     {
+        private record RefreshToken(string refreshToken, DateTime refreshTokenExpiry);
         private readonly IJSRuntime jsRuntime;
 
         public TokenProvider(IJSRuntime _jsRuntime) 
             => jsRuntime = _jsRuntime;
 
-        public async Task<string> GetToken()
+        public async Task<string> GetAccessToken()
         {
             var token = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
             if (!string.IsNullOrWhiteSpace(token))
@@ -37,23 +33,36 @@ namespace Dashboard.Client.Services
             return null;
         }
 
+        public async Task<string> GetRefreshToken()
+        {
+            var jsonToken = await jsRuntime.InvokeAsync<string>("localStorage.getItem", "refreshToken");
+            if (!string.IsNullOrWhiteSpace(jsonToken))
+            {
+                var refToken = JsonSerializer.Deserialize<RefreshToken>(jsonToken);
+                if (DateTime.UtcNow > refToken.refreshTokenExpiry)
+                    return refToken.refreshToken;
+                else
+                    await RemoveToken();
+            }
+            return default;
+        }
+
         public async ValueTask SetToken(TokenResult token)
         {
+            var refToken = new RefreshToken(token.RefreshToken, token.RefreshTokenExpiry);
             await jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token.AccessToken);
-            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshToken", token.RefreshToken);
-            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshTokenExpiry", token.RefreshTokenExpiry);
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", "refreshToken", JsonSerializer.Serialize(refToken));
         }
 
         public async ValueTask RemoveToken()
         {
             await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
             await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshToken");
-            await jsRuntime.InvokeVoidAsync("localStorage.removeItem", "refreshTokenExpiry");
         }
 
         public async Task<IEnumerable<Claim>> GetParsedClaimsFromToken()
         {
-            var token = await GetToken();
+            var token = await GetAccessToken();
             if (string.IsNullOrEmpty(token))
                 return default;
             return ParseClaimsFromJwt(token);

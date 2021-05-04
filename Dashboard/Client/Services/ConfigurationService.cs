@@ -1,16 +1,11 @@
-﻿using Dashboard.Shared;
+﻿using Dashboard.Client.Services.Interfaces;
+using Dashboard.Shared;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services
 {
-    public interface IConfigurationService
-    {
-        Task<ConfigurationModel> GetConfiguration();
-        Task UpdateConfiguration(ConfigurationModel model);
-    }
-
     public class ConfigurationService : IConfigurationService
     {
         private readonly HttpClient httpClient;

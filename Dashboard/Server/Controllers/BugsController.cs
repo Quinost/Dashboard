@@ -1,5 +1,5 @@
 ﻿using Dashboard.Infrastructure.Entity;
-using Dashboard.Server.Services;
+using Dashboard.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +12,9 @@ namespace Dashboard.Server.Controllers
     [Authorize]
     public class BugsController : ControllerBase
     {
-        private readonly BugService bugService;
+        private readonly IBugService bugService;
 
-        public BugsController(BugService _bugService)
+        public BugsController(IBugService _bugService)
         {
             bugService = _bugService;
         }
@@ -32,7 +32,7 @@ namespace Dashboard.Server.Controllers
             }
             catch(Exception ex)
             {
-                await bugService.SaveBug(new BugEntity { Message = ex.Message, System = "CORE API" });
+                await bugService.SaveBug(ex.Message, "CORE API" );
                 return StatusCode(500);
             }
         }

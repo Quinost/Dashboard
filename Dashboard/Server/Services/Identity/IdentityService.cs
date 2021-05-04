@@ -1,10 +1,11 @@
 ﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
+using Dashboard.Server.Services.Interfaces;
 using Dashboard.Shared;
+using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Dashboard.Server.Services.Identity
 {
-    public class IdentityService
+    public class IdentityService : IIdentityService
     {
         private readonly JwtConfig jwtConfig;
         private readonly UserManager<UserEntity> userManager;
@@ -40,12 +41,19 @@ namespace Dashboard.Server.Services.Identity
             return Result<TokenResult>.Success(retVal);
         }
 
-        public async Task Logout(string userName)
+        public async Task<Result> Logout(string userName)
         {
             var user = await userManager.FindByNameAsync(userName);
+            if (user is null)
+                return Result.Failed("User not found");
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
-            await userManager.UpdateAsync(user);
+            var retVal = await userManager.UpdateAsync(user);
+
+            if (retVal.Succeeded)
+                return Result.Success;
+            else
+                return Result.Failed(retVal.ToErrorsString());
         }
 
         public async Task<Result<TokenResult>> RefreshToken(RefreshTokenRequest request)
@@ -66,23 +74,25 @@ namespace Dashboard.Server.Services.Identity
             return Result<TokenResult>.Success(retVal);
         }
 
-
         private async Task<TokenResult> GenerateTokens(UserEntity user)
         {
+            var date = DateTime.UtcNow;
             user.RefreshToken = GenerateRefreshToken();
-            user.RefreshTokenExpiry = DateTime.UtcNow.AddMinutes(jwtConfig.RefreshTokenExpiration);
+            user.RefreshTokenExpiry = date.AddMinutes(jwtConfig.RefreshTokenExpiration);
             await userManager.UpdateAsync(user);
-            var token = GenerateAccessToken(user.Username);
+            var token = GenerateAccessToken(date, user.Username, user.Role.Name);
 
             return new TokenResult { AccessToken = token, RefreshToken = user.RefreshToken, RefreshTokenExpiry = user.RefreshTokenExpiry.Value };
         }
 
 
-        private string GenerateAccessToken(string userName)
+        private string GenerateAccessToken(DateTime now, string userName, string role = "")
         {
-            DateTime now = DateTime.UtcNow;
             var expiry = now.AddMinutes(jwtConfig.AccessTokenExpiration);
             var claims = new[] { new Claim(ClaimTypes.Name, userName) };
+            if (!string.IsNullOrWhiteSpace(role))
+                claims = new[] { claims[0], new Claim(ClaimTypes.Role, role) };
+
             var token = new JwtSecurityToken(
                 issuer: jwtConfig.Issuer,
                 audience: jwtConfig.Audience,
@@ -90,9 +100,7 @@ namespace Dashboard.Server.Services.Identity
                 notBefore: now,
                 expires: expiry,
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)), SecurityAlgorithms.HmacSha256Signature));
-            var generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return generatedToken;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private string GenerateRefreshToken()

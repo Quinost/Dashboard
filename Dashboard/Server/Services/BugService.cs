@@ -6,10 +6,11 @@ using Dashboard.Shared;
 using Dashboard.Infrastructure;
 using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
+using Dashboard.Server.Services.Interfaces;
 
 namespace Dashboard.Server.Services
 {
-    public class BugService
+    public class BugService : IBugService
     {
         private readonly DataContext context;
 
@@ -18,11 +19,11 @@ namespace Dashboard.Server.Services
             context = _context;
         }
 
-        public async Task<Result<BugsWithTotalCountModel>> GetBugs(int startIndex, int count)
+        public async Task<Result<BugsWithCountModel>> GetBugs(int startIndex, int count)
         {
             try
             {
-                var retVal = new BugsWithTotalCountModel();
+                var retVal = new BugsWithCountModel();
                 retVal.Bugs = (await context.Bugs
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
@@ -30,16 +31,23 @@ namespace Dashboard.Server.Services
                     .AsNoTracking()
                     .ToListAsync()).ToBugModel();
                 retVal.TotalCount = await context.Bugs.CountAsync();
-                return Result<BugsWithTotalCountModel>.Success(retVal);
+                return Result<BugsWithCountModel>.Success(retVal);
             }
             catch (Exception ex)
             {
                 await SaveBug(new BugEntity {  Message = ex.Message, System = "CORE API" });
-                return Result<BugsWithTotalCountModel>.Failed(ex.Message);
+                return Result<BugsWithCountModel>.Failed(ex.Message);
             }
         }
 
-        public async Task SaveBug(BugEntity model)
+
+        public async Task SaveBug(string message, string system) 
+            => await SaveBug(new BugEntity { Message = message, System = system });
+
+        public async Task SaveBug(string message, string system, DateTime date)
+            => await SaveBug(new BugEntity { Message = message, System = system, Date = date });
+
+        private async Task SaveBug(BugEntity model)
         {
             try
             {

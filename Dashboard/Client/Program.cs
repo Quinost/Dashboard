@@ -1,5 +1,6 @@
 using Dashboard.Client.Authentication;
 using Dashboard.Client.Services;
+using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +24,9 @@ namespace Dashboard.Client
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
             builder.Services.AddScoped<IBugsService, BugsService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IIdentityService, IdentityService>();
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddScoped<JwtStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider, JwtStateProvider>(sp => sp.GetRequiredService<JwtStateProvider>());

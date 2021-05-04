@@ -1,4 +1,4 @@
-﻿namespace Dashboard.Shared
+﻿namespace Dashboard.Shared.Identity
 {
     public class RefreshTokenRequest
     {

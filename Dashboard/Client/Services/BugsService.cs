@@ -1,15 +1,11 @@
-﻿using Dashboard.Shared;
+﻿using Dashboard.Client.Services.Interfaces;
+using Dashboard.Shared;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services
 {
-    public interface IBugsService
-    {
-        Task<BugsWithTotalCountModel> GetPaginatedBugs(int startIndex, int count);
-    }
-
     public class BugsService : IBugsService
     {
         private readonly HttpClient httpClient;
@@ -18,9 +14,9 @@ namespace Dashboard.Client.Services
         {
             httpClient = _httpClient;
         }
-        public async Task<BugsWithTotalCountModel> GetPaginatedBugs(int startIndex, int count)
+        public async Task<BugsWithCountModel> GetPaginatedBugs(int startIndex, int count)
         {
-            return await httpClient.GetFromJsonAsync<BugsWithTotalCountModel>($"api/bugs?startIndex={startIndex}&count={count}");
+            return await httpClient.GetFromJsonAsync<BugsWithCountModel>($"api/bugs?startIndex={startIndex}&count={count}");
         }
     }
 }

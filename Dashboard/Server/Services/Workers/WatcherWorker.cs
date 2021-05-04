@@ -1,5 +1,6 @@
 ﻿using Dashboard.Server.Services.Helpers;
 using Dashboard.Server.Services.Hubs;
+using Dashboard.Server.Services.Interfaces;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
