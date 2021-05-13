@@ -7,16 +7,20 @@ using Dashboard.Infrastructure;
 using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
 using Dashboard.Server.Services.Interfaces;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace Dashboard.Server.Services
 {
     public class BugService : IBugService
     {
-        private readonly DataContext context;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public BugService(DataContext _context)
+        public BugService(DataContext context, IMapper mapper)
         {
-            context = _context;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Result<BugsWithCountModel>> GetBugs(int startIndex, int count)
@@ -24,13 +28,14 @@ namespace Dashboard.Server.Services
             try
             {
                 var retVal = new BugsWithCountModel();
-                retVal.Bugs = (await context.Bugs
+                var bugsList = await _context.Bugs
                     .OrderBy(x => x.Id)
                     .Skip(startIndex)
                     .Take(count)
                     .AsNoTracking()
-                    .ToListAsync()).ToBugModel();
-                retVal.TotalCount = await context.Bugs.CountAsync();
+                    .ToListAsync();
+                retVal.Bugs = _mapper.Map<IList<BugModel>>(bugsList);
+                retVal.TotalCount = await _context.Bugs.CountAsync();
                 return Result<BugsWithCountModel>.Success(retVal);
             }
             catch (Exception ex)
@@ -51,8 +56,8 @@ namespace Dashboard.Server.Services
         {
             try
             {
-                context.Bugs.Add(model);
-                await context.SaveChangesAsync();
+                _context.Bugs.Add(model);
+                await _context.SaveChangesAsync();
             }
             catch(Exception ex)
             {

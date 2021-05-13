@@ -1,5 +1,6 @@
 ﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Services.Interfaces;
+using Dashboard.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,11 +13,11 @@ namespace Dashboard.Server.Controllers
     [Authorize]
     public class BugsController : ControllerBase
     {
-        private readonly IBugService bugService;
+        private readonly IBugService _bugService;
 
-        public BugsController(IBugService _bugService)
+        public BugsController(IBugService bugService)
         {
-            bugService = _bugService;
+            _bugService = bugService;
         }
 
         [HttpGet]
@@ -24,7 +25,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var bugs = await bugService.GetBugs(startIndex, count);
+                var bugs = await _bugService.GetBugs(startIndex, count);
                 if (bugs.Succeeded)
                     return Ok(bugs.RetVal);
                 else
@@ -32,7 +33,22 @@ namespace Dashboard.Server.Controllers
             }
             catch(Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API" );
+                await _bugService.SaveBug(ex.Message, "CORE API" );
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> SaveBug([FromBody]BugModel bug)
+        {
+            try
+            {
+                await _bugService.SaveBug(bug.Message, bug.System, bug.Date);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }

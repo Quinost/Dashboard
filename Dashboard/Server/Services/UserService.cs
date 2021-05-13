@@ -1,4 +1,5 @@
-﻿using Dashboard.Infrastructure;
+﻿using AutoMapper;
+using Dashboard.Infrastructure;
 using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
 using Dashboard.Server.Services.Interfaces;
@@ -12,49 +13,65 @@ namespace Dashboard.Server.Services
 {
     public class UserService : IUserService
     {
-        private readonly DataContext context;
-        private readonly UserManager<UserEntity> userManager;
+        private readonly DataContext _context;
+        private readonly UserManager<UserEntity> _userManager;
+        private readonly IMapper _mapper;
 
-        public UserService(DataContext _context, UserManager<UserEntity> _userManager)
+        public UserService(DataContext context, UserManager<UserEntity> userManager, IMapper mapper)
         {
-            context = _context;
-            userManager = _userManager;
+            _context = context;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<Result<IEnumerable<UserModel>>> GetUsers()
         {
-            var users = (await context.Users.ToListAsync()).ToUserModelList();
+            var usersList = await _context.Users.AsNoTracking().ToListAsync();
+            var users = _mapper.Map<IEnumerable<UserModel>>(usersList);
             return Result<IEnumerable<UserModel>>.Success(users);
         }
         public async Task<Result> UpdateUser(UserModel model)
         {
-            var user = await userManager.FindByIdAsync(model.Id.ToString());
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
             if (user is null)
                 return Result.Failed("Can't find user");
 
-            user = model.ToUserEntity();
+            user = _mapper.Map<UserEntity>(model);
 
-            var result = await userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
-                return Result.Failed(result.ToErrorsString());
+                return Result.Failed(_mapper.Map<string[]>(result));
 
             return Result.Success;
         }
 
         public async Task<Result> AddUser(UserModel model)
         {
-            var result = await userManager.CreateAsync(model.ToUserEntity());
+            var user = _mapper.Map<UserEntity>(model);
+            var result = await _userManager.CreateAsync(user);
             if (!result.Succeeded)
-                return Result.Failed(result.ToErrorsString());
+                return Result.Failed(_mapper.Map<string[]>(result));
 
             return Result.Success;
         }
 
         public async Task<Result<IEnumerable<RoleModel>>> GetRoles()
         {
-            var roles = (await context.Roles.ToListAsync()).ToRoleModel();
+            var rolesList = await _context.Roles.ToListAsync();
+            var roles = _mapper.Map<IEnumerable<RoleModel>>(rolesList);
             return Result<IEnumerable<RoleModel>>.Success(roles);
+        }
+
+        public async Task<Result> AddRole(string name)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(v => v.Name.ToLower() == name.ToLower());
+            if (role is not null)
+                return Result.Failed($"Role {name} exist");
+
+            _context.Roles.Add(new RoleEntity { Name = name });
+            await _context.SaveChangesAsync();
+            return Result.Success;
         }
     }
 }

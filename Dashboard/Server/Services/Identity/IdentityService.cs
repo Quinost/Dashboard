@@ -1,4 +1,5 @@
-﻿using Dashboard.Infrastructure.Entity;
+﻿using AutoMapper;
+using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
 using Dashboard.Server.Services.Interfaces;
 using Dashboard.Shared;
@@ -16,25 +17,27 @@ namespace Dashboard.Server.Services.Identity
 {
     public class IdentityService : IIdentityService
     {
-        private readonly JwtConfig jwtConfig;
-        private readonly UserManager<UserEntity> userManager;
+        private readonly JwtConfig _jwtConfig;
+        private readonly UserManager<UserEntity> _userManager;
+        private readonly IMapper _mapper;
 
-        public IdentityService(JwtConfig _jwtConfig, UserManager<UserEntity> _userManager)
+        public IdentityService(JwtConfig jwtConfig, UserManager<UserEntity> userManager, IMapper mapper)
         {
-            jwtConfig = _jwtConfig;
-            userManager = _userManager;
+            _jwtConfig = jwtConfig;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<Result<TokenResult>> Login(string userName, string password)
         {
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
             if (user is null)
                 return Result<TokenResult>.Failed("User not found");
 
             if (!user.IsActive)
                 return Result<TokenResult>.Failed("User inactive");
 
-            if (!await userManager.CheckPasswordAsync(user, password))
+            if (!await _userManager.CheckPasswordAsync(user, password))
                 return Result<TokenResult>.Failed("Wrong login or password");
 
             var retVal = await GenerateTokens(user);
@@ -43,17 +46,17 @@ namespace Dashboard.Server.Services.Identity
 
         public async Task<Result> Logout(string userName)
         {
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
             if (user is null)
                 return Result.Failed("User not found");
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
-            var retVal = await userManager.UpdateAsync(user);
+            var retVal = await _userManager.UpdateAsync(user);
 
             if (retVal.Succeeded)
                 return Result.Success;
             else
-                return Result.Failed(retVal.ToErrorsString());
+                return Result.Failed(_mapper.Map<string[]>(retVal));
         }
 
         public async Task<Result<TokenResult>> RefreshToken(RefreshTokenRequest request)
@@ -63,7 +66,7 @@ namespace Dashboard.Server.Services.Identity
                 return Result<TokenResult>.Failed("Invalid token");
 
             var userName = principal.Identity?.Name;
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
             if(user is null)
                 return Result<TokenResult>.Failed("Invalid token");
 
@@ -78,8 +81,8 @@ namespace Dashboard.Server.Services.Identity
         {
             var date = DateTime.UtcNow;
             user.RefreshToken = GenerateRefreshToken();
-            user.RefreshTokenExpiry = date.AddMinutes(jwtConfig.RefreshTokenExpiration);
-            await userManager.UpdateAsync(user);
+            user.RefreshTokenExpiry = date.AddMinutes(_jwtConfig.RefreshTokenExpiration);
+            await _userManager.UpdateAsync(user);
             var token = GenerateAccessToken(date, user.Username, user.Role.Name);
 
             return new TokenResult { AccessToken = token, RefreshToken = user.RefreshToken, RefreshTokenExpiry = user.RefreshTokenExpiry.Value };
@@ -88,18 +91,18 @@ namespace Dashboard.Server.Services.Identity
 
         private string GenerateAccessToken(DateTime now, string userName, string role = "")
         {
-            var expiry = now.AddMinutes(jwtConfig.AccessTokenExpiration);
+            var expiry = now.AddMinutes(_jwtConfig.AccessTokenExpiration);
             var claims = new[] { new Claim(ClaimTypes.Name, userName) };
             if (!string.IsNullOrWhiteSpace(role))
                 claims = new[] { claims[0], new Claim(ClaimTypes.Role, role) };
 
             var token = new JwtSecurityToken(
-                issuer: jwtConfig.Issuer,
-                audience: jwtConfig.Audience,
+                issuer: _jwtConfig.Issuer,
+                audience: _jwtConfig.Audience,
                 claims: claims,
                 notBefore: now,
                 expires: expiry,
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)), SecurityAlgorithms.HmacSha256Signature));
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtConfig.Secret)), SecurityAlgorithms.HmacSha256Signature));
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -127,9 +130,9 @@ namespace Dashboard.Server.Services.Identity
                         ValidateIssuerSigningKey = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ValidIssuer = jwtConfig.Issuer,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
-                        ValidAudience = jwtConfig.Audience,
+                        ValidIssuer = _jwtConfig.Issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtConfig.Secret)),
+                        ValidAudience = _jwtConfig.Audience,
                         ClockSkew = TimeSpan.Zero
                     },
                     out var validatedToken);

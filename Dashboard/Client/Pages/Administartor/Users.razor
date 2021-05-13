@@ -1,4 +1,6 @@
 ﻿@page "/users"
+@attribute [Authorize(Roles = "Administrator")]
+
 
 <table class="table table-hover shadow">
     <thead class="table-dark">

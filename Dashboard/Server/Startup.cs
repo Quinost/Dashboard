@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Dashboard.Infrastructure;
 using Dashboard.Server.Services.Identity;
 using Dashboard.Server.Services.Interfaces;
+using System;
+using FluentValidation.AspNetCore;
+using System.Reflection;
 
 namespace Dashboard.Server
 {
@@ -30,7 +33,6 @@ namespace Dashboard.Server
 
             services.AddDbContext<DataContext>(opts => opts.UseSqlite("Filename=DashboardDB.db"));
 
-            //TODO: RoleStore\
             services.AddIdentityWithStore();
             services.AddJwtBearerToken(jwtConfig);
 
@@ -43,7 +45,18 @@ namespace Dashboard.Server
 
             services.AddHostedService<WatcherWorker>();
 
-            services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddControllers()
+                .AddFluentValidation(opt =>
+            {
+                opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+                //We dont want use standard validator because now we have FluentValidation
+                opt.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+                //Only eng
+                opt.LocalizationEnabled = false;
+            });
+
             services.AddRazorPages();
             services.AddSignalR();
         }

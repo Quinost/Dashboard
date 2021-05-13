@@ -12,13 +12,13 @@ namespace Dashboard.Server.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly IBugService bugService;
-        private readonly IUserService userService;
+        private readonly IBugService _bugService;
+        private readonly IUserService _userService;
 
-        public UsersController(IBugService _bugService, IUserService _userService)
+        public UsersController(IBugService bugService, IUserService userService)
         {
-            bugService = _bugService;
-            userService = _userService;
+            _bugService = bugService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -26,12 +26,12 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var users = await userService.GetUsers();
+                var users = await _userService.GetUsers();
                 return Ok(users.RetVal);
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -41,7 +41,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var result = await userService.UpdateUser(user);
+                var result = await _userService.UpdateUser(user);
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -49,7 +49,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -59,7 +59,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var result = await userService.AddUser(user);
+                var result = await _userService.AddUser(user);
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -67,7 +67,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -78,7 +78,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var result = await userService.GetRoles();
+                var result = await _userService.GetRoles();
                 if (result.Succeeded)
                     return Ok(result.RetVal);
                 else
@@ -86,7 +86,26 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("roles")]
+        public async Task<IActionResult> SaveRole([FromBody]RoleModel role)
+        {
+            try
+            {
+                var result = await _userService.AddRole(role.Name);
+                if (result.Succeeded)
+                    return Ok();
+                else
+                    return BadRequest(result.ErrorToString());
+            }
+            catch (Exception ex)
+            {
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }

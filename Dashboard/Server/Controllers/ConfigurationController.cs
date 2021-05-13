@@ -8,16 +8,16 @@ namespace Dashboard.Server.Controllers
 {
     [Route("api/configuration")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ConfigurationController : ControllerBase
     {
-        private readonly WatcherHelper helper;
-        private readonly JwtConfig config;
+        private readonly WatcherHelper _helper;
+        private readonly JwtConfig _config;
 
-        public ConfigurationController(WatcherHelper _helper, JwtConfig _config)
+        public ConfigurationController(WatcherHelper helper, JwtConfig config)
         {
-            helper = _helper;
-            config = _config;
+            _helper = helper;
+            _config = config;
         }
 
         [HttpGet]
@@ -26,8 +26,8 @@ namespace Dashboard.Server.Controllers
             try
             {
                 ConfigurationModel retVal = new ConfigurationModel();
-                retVal.WatcherWorkerDelayTime = helper.OnDelay(null);
-                retVal.TokenExpirationTime = config.AccessTokenExpiration;
+                retVal.WatcherWorkerDelayTime = _helper.OnDelay(null);
+                retVal.TokenExpirationTime = _config.AccessTokenExpiration;
                 return Ok(retVal);
             }
             catch
@@ -39,7 +39,7 @@ namespace Dashboard.Server.Controllers
         [HttpPost]
         public IActionResult Change([FromBody] ConfigurationModel model)
         {
-            helper.OnDelay(model.WatcherWorkerDelayTime);
+            _helper.OnDelay(model.WatcherWorkerDelayTime);
 
             return Ok();
         }

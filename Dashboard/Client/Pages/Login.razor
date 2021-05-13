@@ -36,8 +36,10 @@
                     </div>
                 }
             </EditForm>
-            <p class="text-secondary">Username: AdminUser ; Password: securePass</p>
-            <p class="text-secondary">Username: BasicUser ; Password: securePass</p>
+            <span class="text-secondary mt-5">
+                <button class="btn btn-outline-dark" @onclick=@(() => { Username = "AdminUser"; Password = "securePass"; })>Fill with AdminUser</button>
+                <button class="btn btn-outline-dark" @onclick=@(() => { Username = "BasicUser"; Password = "securePass"; })>Fill with BasicUser</button>
+            </span>
         </div>
     </div>
 </div>

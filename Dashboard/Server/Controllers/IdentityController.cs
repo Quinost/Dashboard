@@ -15,13 +15,13 @@ namespace Dashboard.Server.Controllers
     {
         public record UserQuery(string username, string password);
 
-        private readonly IBugService bugService;
-        private readonly IIdentityService identityService;
+        private readonly IBugService _bugService;
+        private readonly IIdentityService _identityService;
 
-        public IdentityController(IBugService _bugService, IIdentityService _identityService)
+        public IdentityController(IBugService bugService, IIdentityService identityService)
         {
-            bugService = _bugService;
-            identityService = _identityService;
+            _bugService = bugService;
+            _identityService = identityService;
         }
 
 
@@ -32,7 +32,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var retVal = await identityService.Login(user.username, user.password);
+                var retVal = await _identityService.Login(user.username, user.password);
                 if (retVal.Succeeded)
                     return Ok(retVal.RetVal);
                 else
@@ -40,7 +40,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -51,12 +51,12 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                await identityService.Logout(HttpContext.User.Identity?.Name);
+                await _identityService.Logout(HttpContext.User.Identity?.Name);
                 return Ok();
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }
@@ -68,7 +68,7 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var retVal = await identityService.RefreshToken(request);
+                var retVal = await _identityService.RefreshToken(request);
                 if (retVal.Succeeded)
                     return Ok(retVal.RetVal);
                 else
@@ -76,7 +76,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await bugService.SaveBug(ex.Message, "CORE API");
+                await _bugService.SaveBug(ex.Message, "CORE API");
                 return StatusCode(500);
             }
         }

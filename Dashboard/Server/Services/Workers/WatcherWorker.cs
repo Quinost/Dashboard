@@ -12,21 +12,21 @@ namespace Dashboard.Server.Services.Workers
 {
     public class WatcherWorker : BackgroundService
     {
-        public readonly IHubContext<WatcherHub, IWatcherHub> hub;
-        private readonly WatcherHelper helper;
+        public readonly IHubContext<WatcherHub, IWatcherHub> Hub;
+        private readonly WatcherHelper _helper;
         public WatcherModel model;
         private TimeSpan delayTime;
 
         //only for testing if client work properly
         private int i = 0;
 
-        public WatcherWorker(IHubContext<WatcherHub, IWatcherHub> _hub, WatcherHelper _helper)
+        public WatcherWorker(IHubContext<WatcherHub, IWatcherHub> hub, WatcherHelper helper)
         {
             delayTime = TimeSpan.FromMinutes(1);
-            hub = _hub;
-            helper = _helper;
-            helper.OnDoAction += Helper_OnDoAction;
-            helper.OnDelayAction += Helper_OnDelayAction;
+            Hub = hub;
+            _helper = helper;
+            _helper.OnDoAction += Helper_OnDoAction;
+            _helper.OnDelayAction += Helper_OnDelayAction;
         }
 
         private int Helper_OnDelayAction(int? arg)
@@ -57,7 +57,7 @@ namespace Dashboard.Server.Services.Workers
                 model.Message = "Work";
                 i++;
             }
-            await hub.Clients.All.WatcherStatus(model);
+            await Hub.Clients.All.WatcherStatus(model);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

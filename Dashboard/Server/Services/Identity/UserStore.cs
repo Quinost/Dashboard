@@ -11,18 +11,18 @@ namespace Dashboard.Server.Services.Identity
 {
     public class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserLockoutStore<UserEntity>
     {
-        private readonly DataContext context;
+        private readonly DataContext _context;
 
-        public UserStore(DataContext _context)
+        public UserStore(DataContext context)
         {
-            context = _context;
+            _context = context;
         }
 
         public void Dispose()
-            => context.Dispose();
+            => _context.Dispose();
 
         public async Task<UserEntity> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) 
-            => await context.Users.Include(v => v.Role).FirstOrDefaultAsync(v => v.Username.ToUpper() == normalizedUserName);
+            => await _context.Users.AsNoTracking().Include(v => v.Role).FirstOrDefaultAsync(v => v.Username.ToUpper() == normalizedUserName);
 
         public Task<string> GetPasswordHashAsync(UserEntity user, CancellationToken cancellationToken) 
             => Task.FromResult(user.Password);
@@ -31,13 +31,13 @@ namespace Dashboard.Server.Services.Identity
         {
             try
             {
-                context.Users.Update(user);
-                await context.SaveChangesAsync();
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
                 return IdentityResult.Success;
             }
             catch(Exception ex)
             {
-                return IdentityResult.Failed(new IdentityError() { Description = ex.Message });
+                return IdentityResult.Failed(new IdentityError() { Code = ex.Message });
             }     
         }
 
@@ -52,16 +52,16 @@ namespace Dashboard.Server.Services.Identity
 
         public async Task<IdentityResult> CreateAsync(UserEntity user, CancellationToken cancellationToken)
         {
-            context.Users.Add(user);
-            var res = await context.SaveChangesAsync();
+            _context.Users.Add(user);
+            var res = await _context.SaveChangesAsync();
             if (res != 0)
                 return IdentityResult.Success;
             else
-                return IdentityResult.Failed(new IdentityError { Description = "Can't create user" });
+                return IdentityResult.Failed(new IdentityError { Code = "Can't create user" });
         }
 
         public async Task<UserEntity> FindByIdAsync(string userId, CancellationToken cancellationToken)
-            => await context.Users.FindAsync(userId);
+            => await _context.Users.AsNoTracking().FirstOrDefaultAsync(v => v.Id == Guid.Parse(userId));
 
         public Task SetPasswordHashAsync(UserEntity user, string passwordHash, CancellationToken cancellationToken)
             => Task.FromResult(user.Password = passwordHash);
