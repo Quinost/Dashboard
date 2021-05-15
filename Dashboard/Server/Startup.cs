@@ -15,6 +15,7 @@ using Dashboard.Server.Services.Interfaces;
 using System;
 using FluentValidation.AspNetCore;
 using System.Reflection;
+using Dashboard.Server.Services.Middleware;
 
 namespace Dashboard.Server
 {
@@ -79,11 +80,14 @@ namespace Dashboard.Server
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-
             app.UseRouting();
+
+            app.UseMiddleware<TokenBlackListMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

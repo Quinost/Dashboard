@@ -46,7 +46,7 @@ namespace Dashboard.Server.Controllers
         }
         [Route("logout")]
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Logout()
         {
             try

@@ -91,7 +91,7 @@ namespace Dashboard.Server.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [Route("roles")]
         public async Task<IActionResult> SaveRole([FromBody]RoleModel role)
         {

@@ -27,10 +27,6 @@
     <ProjectReference Include="..\Shared\Dashboard.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Middleware\" />
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="copy /Y &quot;$(ProjectDir)Properties\defaultConfig.json&quot; &quot;$(ProjectDir)appsettings.json&quot;&#xD;&#xA;if $(ConfigurationName) == Dev (&#xD;&#xA;copy /Y &quot;$(ProjectDir)Properties\devConfig.json&quot; &quot;$(ProjectDir)appsettings.json&quot;&#xD;&#xA;)&#xD;&#xA;if $(ConfigurationName) == Prod (&#xD;&#xA;copy /Y &quot;$(ProjectDir)Properties\prodConfig.json&quot; &quot;$(ProjectDir)appsettings.json&quot;&#xD;&#xA;)&#xD;&#xA;" />
   </Target>

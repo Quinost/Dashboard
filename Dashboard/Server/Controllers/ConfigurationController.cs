@@ -8,7 +8,7 @@ namespace Dashboard.Server.Controllers
 {
     [Route("api/configuration")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ConfigurationController : ControllerBase
     {
         private readonly WatcherHelper _helper;
