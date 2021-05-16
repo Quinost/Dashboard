@@ -2,6 +2,7 @@
 using Dashboard.Server.Services.Interfaces;
 using Dashboard.Shared;
 using Dashboard.Shared.Identity;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -51,7 +52,8 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                await _identityService.Logout(HttpContext.User.Identity?.Name);
+                var accessToken = await HttpContext.GetTokenAsync("Bearer", "access_token");
+                await _identityService.Logout(HttpContext.User.Identity?.Name, accessToken);
                 return Ok();
             }
             catch (Exception ex)

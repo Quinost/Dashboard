@@ -2,12 +2,12 @@
 using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Models;
 using Dashboard.Server.Services.Interfaces;
-using Dashboard.Shared;
 using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,12 +20,14 @@ namespace Dashboard.Server.Services.Identity
         private readonly JwtConfig _jwtConfig;
         private readonly UserManager<UserEntity> _userManager;
         private readonly IMapper _mapper;
+        private readonly IBlackListJWT _blackList;
 
-        public IdentityService(JwtConfig jwtConfig, UserManager<UserEntity> userManager, IMapper mapper)
+        public IdentityService(JwtConfig jwtConfig, UserManager<UserEntity> userManager, IMapper mapper, IBlackListJWT blackList)
         {
             _jwtConfig = jwtConfig;
             _userManager = userManager;
             _mapper = mapper;
+            _blackList = blackList;
         }
 
         public async Task<Result<TokenResult>> Login(string userName, string password)
@@ -44,7 +46,7 @@ namespace Dashboard.Server.Services.Identity
             return Result<TokenResult>.Success(retVal);
         }
 
-        public async Task<Result> Logout(string userName)
+        public async Task<Result> Logout(string userName, string accessToken)
         {
             var user = await _userManager.FindByNameAsync(userName);
             if (user is null)
@@ -52,6 +54,10 @@ namespace Dashboard.Server.Services.Identity
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
             var retVal = await _userManager.UpdateAsync(user);
+
+            var (_, jwtToken) = DecodeJwtToken(accessToken);
+
+            _blackList.AddToken(accessToken, jwtToken.ValidTo);
 
             if (retVal.Succeeded)
                 return Result.Success;

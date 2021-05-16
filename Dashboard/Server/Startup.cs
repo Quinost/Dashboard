@@ -41,10 +41,12 @@ namespace Dashboard.Server
             services.AddScoped<IBugService, BugService>();
             services.AddScoped<IUserService, UserService>();
 
+            services.AddSingleton<IBlackListJWT, BlackListJWT>();
             services.AddSingleton<WatcherHelper>();
             services.AddSingleton(jwtConfig);
 
             services.AddHostedService<WatcherWorker>();
+            services.AddHostedService<BlackListWorker>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
