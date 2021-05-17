@@ -1,7 +1,5 @@
 ﻿using Dashboard.Server.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,12 +21,9 @@ namespace Dashboard.Server.Services.Middleware
             var auth = context.Request.Headers.FirstOrDefault(v => v.Key == "Authorization");
 
             if (!string.IsNullOrEmpty(auth.Key))
-            {
                 if (_blackList.IsTokenOnBlackList(auth.Value))
-                {
                     context.Request.Headers.Remove(auth.Key);
-                }
-            }
+
             await _next(context);
         }
     }

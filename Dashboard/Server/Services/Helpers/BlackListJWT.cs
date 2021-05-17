@@ -17,9 +17,11 @@ namespace Dashboard.Server.Services.Helpers
         public void AddToken(string token, DateTime date)
         {
             string accToken = token;
-            if (accToken.Contains("bearer"))
+            if (accToken.Contains("bearer", StringComparison.CurrentCultureIgnoreCase))
             {
                 var splited = token.Split(' ');
+                if (splited.Count() != 2)
+                    return;
                 accToken = splited[1];
             }
             if (_accessToken.ContainsKey(token))
@@ -31,9 +33,11 @@ namespace Dashboard.Server.Services.Helpers
         public bool IsTokenOnBlackList(string token)
         {
             string accessToken = token;
-            if (token.Contains("bearer"))
+            if (token.Contains("bearer", StringComparison.CurrentCultureIgnoreCase))
             {
                 var splited = token.Split(' ');
+                if (splited.Count() != 2)
+                    return false;
                 accessToken = splited[1];
             }
 
