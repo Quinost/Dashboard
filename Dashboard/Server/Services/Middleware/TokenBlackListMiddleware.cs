@@ -1,5 +1,6 @@
 ﻿using Dashboard.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Dashboard.Server.Services.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            var auth = context.Request.Headers.FirstOrDefault(v => v.Key == "Authorization");
+            var auth = context.Request.Headers.FirstOrDefault(v => v.Key == HeaderNames.Authorization);
 
             if (!string.IsNullOrEmpty(auth.Key))
                 if (_blackList.IsTokenOnBlackList(auth.Value))
