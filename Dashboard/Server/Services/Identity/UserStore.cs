@@ -1,11 +1,7 @@
-﻿using Dashboard.Infrastructure;
+﻿using Dashboard.Data;
 using Dashboard.Infrastructure.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dashboard.Server.Services.Identity
 {

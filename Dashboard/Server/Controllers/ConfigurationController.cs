@@ -1,6 +1,8 @@
-﻿using Dashboard.Server.Services.Helpers;
+﻿using Dashboard.Functions.Notifications.SendBug;
+using Dashboard.Infrastructure.Helpers;
 using Dashboard.Server.Services.Identity;
 using Dashboard.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +13,15 @@ namespace Dashboard.Server.Controllers
     [Authorize]
     public class ConfigurationController : ControllerBase
     {
-        private readonly WatcherHelper _helper;
-        private readonly JwtConfig _config;
+        private readonly WatcherHelper helper;
+        private readonly JwtConfig config;
+        private readonly IMediator mediator;
 
-        public ConfigurationController(WatcherHelper helper, JwtConfig config)
+        public ConfigurationController(WatcherHelper helper, JwtConfig config, IMediator mediator)
         {
-            _helper = helper;
-            _config = config;
+            this.helper = helper;
+            this.config = config;
+            this.mediator = mediator;
         }
 
         [HttpGet]
@@ -26,12 +30,13 @@ namespace Dashboard.Server.Controllers
             try
             {
                 ConfigurationModel retVal = new ConfigurationModel();
-                retVal.WatcherWorkerDelayTime = _helper.OnDelay(null);
-                retVal.TokenExpirationTime = _config.AccessTokenExpiration;
+                retVal.WatcherWorkerDelayTime = helper.OnDelay(null);
+                retVal.TokenExpirationTime = config.AccessTokenExpiration;
                 return Ok(retVal);
             }
-            catch
+            catch (Exception ex)
             {
+                mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }
@@ -39,7 +44,7 @@ namespace Dashboard.Server.Controllers
         [HttpPost]
         public IActionResult Change([FromBody] ConfigurationModel model)
         {
-            _helper.OnDelay(model.WatcherWorkerDelayTime);
+            helper.OnDelay(model.WatcherWorkerDelayTime);
 
             return Ok();
         }

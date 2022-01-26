@@ -1,5 +1,4 @@
-﻿using Dashboard.Client.Services;
-using Dashboard.Client.Services.Interfaces;
+﻿using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
 namespace Dashboard.Client.Pages

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Functions\Bugs\Commands\CreateBug\" />
+    <Folder Include="Functions\Bugs\Commands\DeleteBug\" />
+    <Folder Include="Functions\Bugs\Commands\UpdateBug\" />
+    <Folder Include="Functions\Configuration\Commands\" />
+    <Folder Include="Functions\Configuration\Queries\" />
+    <Folder Include="Functions\Identity\Commands\" />
+    <Folder Include="Functions\Identity\Queries\" />
+    <Folder Include="Functions\Statistic\Commands\" />
+    <Folder Include="Functions\Statistic\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dashboard.Data\Dashboard.Data.csproj" />
+    <ProjectReference Include="..\Dashboard\Shared\Dashboard.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

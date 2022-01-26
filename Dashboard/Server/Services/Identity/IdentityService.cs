@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using Dashboard.Infrastructure.Entity;
-using Dashboard.Server.Models;
 using Dashboard.Server.Services.Interfaces;
+using Dashboard.Shared;
 using Dashboard.Shared.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Dashboard.Server.Services.Identity
 {

@@ -1,56 +1,52 @@
-﻿using Dashboard.Infrastructure.Entity;
-using Dashboard.Server.Services.Interfaces;
+﻿using AutoMapper;
+using Dashboard.Functions.Functions.Bugs.Queries.GetBugsList;
+using Dashboard.Functions.Notifications.SendBug;
 using Dashboard.Shared;
-using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
-namespace Dashboard.Server.Controllers
+namespace Dashboard.Server.Controllers;
+
+[Route("api/bugs")]
+[ApiController]
+public class BugsController : ControllerBase
 {
-    [Route("api/bugs")]
-    [ApiController]
-    [Authorize]
-    public class BugsController : ControllerBase
+    private readonly IMediator mediator;
+    private readonly IMapper mapper;
+
+    public BugsController(IMediator mediator, IMapper mapper)
     {
-        private readonly IBugService _bugService;
+        this.mediator = mediator;
+        this.mapper = mapper;
+    }
 
-        public BugsController(IBugService bugService)
+    [HttpGet]
+    public async Task<IActionResult> GetBugs([FromQuery] int startIndex, [FromQuery] int count)
+    {
+        try
         {
-            _bugService = bugService;
+            var bugs = await mediator.Send(new GetBugsListQuery(startIndex, count));
+            return Ok(mapper.Map<BugsWithCountModel>(bugs));
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetBugs([FromQuery] int startIndex, [FromQuery] int count)
+        catch (Exception ex)
         {
-            try
-            {
-                var bugs = await _bugService.GetBugs(startIndex, count);
-                if (bugs.Succeeded)
-                    return Ok(bugs.RetVal);
-                else
-                    return NotFound(bugs.ErrorToString());
-            }
-            catch(Exception ex)
-            {
-                await _bugService.SaveBug(ex.Message, "CORE API" );
-                return StatusCode(500);
-            }
+            await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
+            return StatusCode(500);
         }
+    }
 
-        [HttpPut]
-        public async Task<IActionResult> SaveBug([FromBody]BugModel bug)
+    [HttpPut]
+    public async Task<IActionResult> SaveBug([FromBody]BugModel bug)
+    {
+        try
         {
-            try
-            {
-                await _bugService.SaveBug(bug.Message, bug.System, bug.Date);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                await _bugService.SaveBug(ex.Message, "CORE API");
-                return StatusCode(500);
-            }
+            await mediator.Publish(new SendBugEvent(bug.Message, bug.System));
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
+            return StatusCode(500);
         }
     }
 }

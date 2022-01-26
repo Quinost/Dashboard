@@ -1,8 +1,5 @@
-﻿using Dashboard.Shared;
-using Dashboard.Shared.Identity;
-using System.Collections.Generic;
+﻿using Dashboard.Shared.Identity;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Dashboard.Client.Services.Interfaces
 {

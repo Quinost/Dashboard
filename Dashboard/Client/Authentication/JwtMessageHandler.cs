@@ -1,10 +1,6 @@
-﻿using Dashboard.Client.Services;
-using Dashboard.Client.Services.Interfaces;
+﻿using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dashboard.Client.Authentication
 {

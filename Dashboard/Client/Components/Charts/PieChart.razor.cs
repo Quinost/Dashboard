@@ -2,10 +2,6 @@
 using ChartJs.Blazor.Common;
 using ChartJs.Blazor.PieChart;
 using ChartJs.Blazor.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Dashboard.Client.Components.Charts
 {

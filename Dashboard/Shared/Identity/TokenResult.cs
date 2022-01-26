@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace Dashboard.Shared.Identity
+﻿namespace Dashboard.Shared.Identity;
+public class TokenResult
 {
-    public class TokenResult
-    {
-        public string RefreshToken { get; set; }
-        public DateTime RefreshTokenExpiry { get; set; }
-        public string AccessToken { get; set; }
-    }
+    public string RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiry { get; set; }
+    public string AccessToken { get; set; }
 }

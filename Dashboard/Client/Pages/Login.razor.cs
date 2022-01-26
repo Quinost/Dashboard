@@ -1,10 +1,6 @@
-﻿using Dashboard.Client.Services;
-using Dashboard.Client.Services.Interfaces;
+﻿using Dashboard.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.WebUtilities;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace Dashboard.Client.Pages
 {

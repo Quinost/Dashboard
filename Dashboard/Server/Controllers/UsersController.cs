@@ -1,9 +1,14 @@
-﻿using Dashboard.Server.Services.Interfaces;
+﻿using AutoMapper;
+using Dashboard.Functions.Functions.Users.Commands.CreateRole;
+using Dashboard.Functions.Functions.Users.Commands.CreateUser;
+using Dashboard.Functions.Functions.Users.Commands.UpdateUser;
+using Dashboard.Functions.Functions.Users.Queries.GetRoleList;
+using Dashboard.Functions.Functions.Users.Queries.GetUserList;
+using Dashboard.Functions.Notifications.SendBug;
 using Dashboard.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace Dashboard.Server.Controllers
 {
@@ -12,13 +17,13 @@ namespace Dashboard.Server.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly IBugService _bugService;
-        private readonly IUserService _userService;
+        private readonly IMediator mediator;
+        private readonly IMapper mapper;
 
-        public UsersController(IBugService bugService, IUserService userService)
+        public UsersController(IMediator mediator, IMapper mapper)
         {
-            _bugService = bugService;
-            _userService = userService;
+            this.mediator = mediator;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -26,22 +31,22 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var users = await _userService.GetUsers();
-                return Ok(users.RetVal);
+                var users = await mediator.Send(new GetUserListQuery());
+                return Ok(mapper.Map<IEnumerable<UserModel>>(users));
             }
             catch (Exception ex)
             {
-                await _bugService.SaveBug(ex.Message, "CORE API");
+                await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateUser([FromBody]UserModel user)
+        public async Task<IActionResult> UpdateUser([FromBody] UserModel user)
         {
             try
             {
-                var result = await _userService.UpdateUser(user);
+                var result = await mediator.Send(new UpdateUserCommand(mapper.Map<UserUpdate>(user)));
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -49,17 +54,17 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await _bugService.SaveBug(ex.Message, "CORE API");
+                await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }
 
         [HttpPut]
-        public async Task<IActionResult> AddUser([FromBody]UserModel user)
+        public async Task<IActionResult> AddUser([FromBody] UserModel user)
         {
             try
             {
-                var result = await _userService.AddUser(user);
+                var result = await mediator.Send(new CreateUserCommand(mapper.Map<UserCreate>(user)));
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -67,7 +72,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await _bugService.SaveBug(ex.Message, "CORE API");
+                await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }
@@ -78,26 +83,23 @@ namespace Dashboard.Server.Controllers
         {
             try
             {
-                var result = await _userService.GetRoles();
-                if (result.Succeeded)
-                    return Ok(result.RetVal);
-                else
-                    return BadRequest(result.ErrorToString());
+                var result = await mediator.Send(new GetRoleListQuery());
+                return Ok(mapper.Map<IEnumerable<RoleModel>>(result));
             }
             catch (Exception ex)
             {
-                await _bugService.SaveBug(ex.Message, "CORE API");
+                await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }
 
         [HttpPut]
         [Route("roles")]
-        public async Task<IActionResult> SaveRole([FromBody]RoleModel role)
+        public async Task<IActionResult> SaveRole([FromBody] RoleModel role)
         {
             try
             {
-                var result = await _userService.AddRole(role.Name);
+                var result = await mediator.Send(new CreateRoleCommand(role.Name));
                 if (result.Succeeded)
                     return Ok();
                 else
@@ -105,7 +107,7 @@ namespace Dashboard.Server.Controllers
             }
             catch (Exception ex)
             {
-                await _bugService.SaveBug(ex.Message, "CORE API");
+                await mediator.Publish(new SendBugEvent(ex.Message, "CORE"));
                 return StatusCode(500);
             }
         }

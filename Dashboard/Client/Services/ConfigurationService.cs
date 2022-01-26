@@ -1,27 +1,23 @@
 ﻿using Dashboard.Client.Services.Interfaces;
 using Dashboard.Shared;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
-namespace Dashboard.Client.Services
+namespace Dashboard.Client.Services;
+public class ConfigurationService : IConfigurationService
 {
-    public class ConfigurationService : IConfigurationService
+    private readonly HttpClient httpClient;
+    public ConfigurationService(HttpClient _httpClient)
     {
-        private readonly HttpClient httpClient;
-        public ConfigurationService(HttpClient _httpClient)
-        {
-            httpClient = _httpClient;
-        }
+        httpClient = _httpClient;
+    }
 
-        public async Task<ConfigurationModel> GetConfiguration()
-        {
-            return await httpClient.GetFromJsonAsync<ConfigurationModel>("/api/configuration");
-        }
+    public async Task<ConfigurationModel> GetConfiguration()
+    {
+        return await httpClient.GetFromJsonAsync<ConfigurationModel>("/api/configuration");
+    }
 
-        public async Task UpdateConfiguration(ConfigurationModel model)
-        {
-            var retVal = await httpClient.PostAsJsonAsync("/api/configuration", model);
-        }
+    public async Task UpdateConfiguration(ConfigurationModel model)
+    {
+        var retVal = await httpClient.PostAsJsonAsync("/api/configuration", model);
     }
 }

@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Dashboard.Shared
+﻿namespace Dashboard.Shared;
+public class BugsWithCountModel
 {
-    public class BugsWithCountModel
-    {
-        public int TotalCount { get; set; }
-        public IEnumerable<BugModel> Bugs { get; set; }
-    }
+    public int TotalCount { get; set; }
+    public IEnumerable<BugModel> Bugs { get; set; }
 }
