@@ -1,7 +1,6 @@
 ﻿using Dashboard.Infrastructure.Entity;
 using Dashboard.Server.Services.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 

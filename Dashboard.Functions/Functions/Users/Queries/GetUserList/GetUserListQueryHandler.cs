@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using Dashboard.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace Dashboard.Functions.Functions.Users.Queries.GetUserList;
+﻿namespace Dashboard.Functions.Functions.Users.Queries.GetUserList;
 public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, IEnumerable<UserRead>>
 {
     private readonly DataContext context;

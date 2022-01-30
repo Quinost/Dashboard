@@ -1,11 +1,9 @@
 ﻿using Dashboard.Shared;
-using System.Threading.Tasks;
 
-namespace Dashboard.Client.Services.Interfaces
+namespace Dashboard.Client.Services.Interfaces;
+
+public interface IConfigurationService
 {
-    public interface IConfigurationService
-    {
-        Task<ConfigurationModel> GetConfiguration();
-        Task UpdateConfiguration(ConfigurationModel model);
-    }
+    Task<ConfigurationModel> GetConfiguration();
+    Task UpdateConfiguration(ConfigurationModel model);
 }

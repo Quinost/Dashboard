@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using Dashboard.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace Dashboard.Functions.Functions.Bugs.Queries.GetBugsList;
+﻿namespace Dashboard.Functions.Functions.Bugs.Queries.GetBugsList;
 public class GetBugsQueryHandler : IRequestHandler<GetBugsListQuery, BugsWithCountRead>
 {
     private readonly DataContext context;
@@ -18,7 +14,7 @@ public class GetBugsQueryHandler : IRequestHandler<GetBugsListQuery, BugsWithCou
     {
         var retVal = new BugsWithCountRead();
         var bugsList = await context.Bugs
-            .OrderBy(x => x.Id)
+            .OrderByDescending(x => x.Id)
             .Skip(request.StartIndex)
             .Take(request.Count)
             .AsNoTracking()

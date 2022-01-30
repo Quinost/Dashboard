@@ -1,7 +1,8 @@
-﻿using Dashboard.Server.Services.Interfaces;
+﻿using Dashboard.Infrastructure.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
-namespace Dashboard.Server.Services.Middleware;
+namespace Dashboard.Infrastructure.Middleware;
 public class TokenBlackListMiddleware
 {
     private readonly RequestDelegate _next;

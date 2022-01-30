@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Net.Http.Headers;
 
-namespace Dashboard.Server.Services.Middleware;
+namespace Dashboard.Infrastructure.Middleware;
 public class RequestResponseMiddleware
 {
     private readonly RequestDelegate _next;

@@ -1,6 +1,7 @@
-﻿using Dashboard.Server.Services.Interfaces;
+﻿using Dashboard.Infrastructure.Helpers;
+using Microsoft.Extensions.Hosting;
 
-namespace Dashboard.Server.Services.Workers;
+namespace Dashboard.Infrastructure.Workers;
 public class BlackListWorker : BackgroundService
 {
     private readonly IBlackListJWT _blackListJWT;

@@ -3,12 +3,14 @@ using Dashboard.Functions.Functions.Bugs.Queries.GetBugsList;
 using Dashboard.Functions.Notifications.SendBug;
 using Dashboard.Shared;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers;
 
 [Route("api/bugs")]
 [ApiController]
+[Authorize]
 public class BugsController : ControllerBase
 {
     private readonly IMediator mediator;

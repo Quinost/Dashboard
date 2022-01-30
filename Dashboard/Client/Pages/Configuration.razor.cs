@@ -3,42 +3,41 @@ using Dashboard.Shared;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
 
-namespace Dashboard.Client.Pages
+namespace Dashboard.Client.Pages;
+
+public partial class Configuration
 {
-    public partial class Configuration
+    [Inject]
+    public IConfigurationService configurationService { get; set; }
+
+    [Inject]
+    public INotificationService notificationService { get; set; }
+
+    private ConfigurationModel configurationModelTemp;
+
+    [Range(0, int.MaxValue, ErrorMessage = "Enter valid integer number")]
+    public string WatcherWorkerDelayTime { get; set; }
+
+    public string AccessTokenExpirationTime { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject] 
-        public IConfigurationService configurationService { get; set; }
+        configurationModelTemp = await configurationService.GetConfiguration();
+        WatcherWorkerDelayTime = configurationModelTemp.WatcherWorkerDelayTime.ToString();
+        AccessTokenExpirationTime = configurationModelTemp.TokenExpirationTime.ToString();
+        StateHasChanged();
+    }
 
-        [Inject]
-        public INotificationService notificationService { get; set; }
-
-        private ConfigurationModel configurationModelTemp;
-
-        [Range(0, int.MaxValue, ErrorMessage = "Enter valid integer number")]
-        public string WatcherWorkerDelayTime { get; set; }
-
-        public string AccessTokenExpirationTime { get; set; }
-
-
-        protected override async Task OnInitializedAsync()
+    protected async void OnValidSubmit()
+    {
+        var confg = new ConfigurationModel()
         {
-            configurationModelTemp = await configurationService.GetConfiguration();
-            WatcherWorkerDelayTime = configurationModelTemp.WatcherWorkerDelayTime.ToString();
-            AccessTokenExpirationTime = configurationModelTemp.TokenExpirationTime.ToString();
-            StateHasChanged();
-        }
-
-        protected async void OnValidSubmit()
-        {
-            var confg = new ConfigurationModel()
-            {
-                WatcherWorkerDelayTime = int.Parse(WatcherWorkerDelayTime)
-            };
-            await configurationService.UpdateConfiguration(confg);
-            notificationService.ShowNotification("Configuration updated successfully");
-            configurationModelTemp = await configurationService.GetConfiguration();
-            StateHasChanged();
-        }
+            WatcherWorkerDelayTime = int.Parse(WatcherWorkerDelayTime)
+        };
+        await configurationService.UpdateConfiguration(confg);
+        notificationService.ShowNotification("Configuration updated successfully");
+        configurationModelTemp = await configurationService.GetConfiguration();
+        StateHasChanged();
     }
 }

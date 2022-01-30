@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Dashboard.Server.Services.Interfaces
+﻿namespace Dashboard.Infrastructure.Helpers
 {
     public interface IBlackListJWT
     {

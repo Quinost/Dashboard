@@ -2,8 +2,9 @@
 using Dashboard.Infrastructure.Hubs;
 using Dashboard.Shared;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 
-namespace Dashboard.Server.Services.Workers;
+namespace Dashboard.Infrastructure.Workers;
 public class WatcherWorker : BackgroundService
 {
     public readonly IHubContext<WatcherHub, IWatcherHub> Hub;

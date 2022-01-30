@@ -1,9 +1,4 @@
-﻿using Dashboard.Server.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Dashboard.Infrastructure.Helpers
+﻿namespace Dashboard.Infrastructure.Helpers
 {
     public class BlackListJWT : IBlackListJWT
     {

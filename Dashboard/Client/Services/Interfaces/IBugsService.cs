@@ -1,10 +1,8 @@
 ﻿using Dashboard.Shared;
-using System.Threading.Tasks;
 
-namespace Dashboard.Client.Services.Interfaces
+namespace Dashboard.Client.Services.Interfaces;
+
+public interface IBugsService
 {
-    public interface IBugsService
-    {
-        Task<BugsWithCountModel> GetPaginatedBugs(int startIndex, int count);
-    }
+    Task<BugsWithCountModel> GetPaginatedBugs(int startIndex, int count);
 }
