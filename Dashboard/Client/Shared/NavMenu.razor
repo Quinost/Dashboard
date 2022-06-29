@@ -1,51 +1,8 @@
-﻿<div class="top-row p-lg-4 navbar bg-dark shadow-sm">
-    <a class="navbar-bra text-white" href="">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard me-2 align-text-bottom" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-            <circle cx="12" cy="13" r="2"></circle>
-            <line x1="13.45" y1="11.55" x2="15.5" y2="9.5"></line>
-            <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
-        </svg>Dashboard
-    </a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="bugs">
-                <span class="oi oi-bug" aria-hidden="true"></span> Bugs
-            </NavLink>
-        </li>
-        <AuthorizeView Roles="Administrator">
-            <li class="nav-item">
-                <NavLink class="nav-link" href="users">
-                    <span class="oi oi-people" aria-hidden="true"></span> Users
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink class="nav-link" href="config">
-                    <span class="oi oi-cog" aria-hidden="true"></span> Configuration
-                </NavLink>
-            </li>
-        </AuthorizeView>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/bugs" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.BugReport">Bugs</MudNavLink>
+    <MudNavGroup Title="Settings" Expanded="true" Icon="@Icons.Filled.Settings">
+        <MudNavLink Href="/users"  Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.PeopleAlt">Users</MudNavLink>
+        <MudNavLink Href="/config"  Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Settings">Configuration</MudNavLink>
+    </MudNavGroup>
+</MudNavMenu>

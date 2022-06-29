@@ -1,8 +1,70 @@
 ﻿@inherits LayoutComponentBase
 @inject IIdentityService auth
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 <AuthorizeView>
     <Authorized>
-        <div class="page">
+        <MudLayout>
+            <MudAppBar>
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <WatcherCheckComponent />
+                <MudSpacer />
+                Hi @context.User.Identity.Name
+                <MudIconButton Style="margin-left:10px" Icon="@Icons.Material.Filled.Logout" Color="Color.Primary" Href="/logout">Log out</MudIconButton>
+            </MudAppBar>
+            <MudDrawer @bind-Open="@_drawerOpen">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
+                </MudDrawerHeader>
+                <NavMenu />
+            </MudDrawer>
+            <MudMainContent>
+                <div style="padding: 10px">
+                    @Body
+                </div>
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+<MudThemeProvider Theme="Theme" />
+
+@code {
+    MudTheme Theme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = Colors.Grey.Lighten1,
+                //Secondary = Colors.Grey.Lighten5,
+                AppbarBackground = Colors.Grey.Darken4,
+                //AppbarText = Colors.Grey.Lighten5,
+                DrawerBackground = Colors.Grey.Darken4,
+                DrawerText = Colors.Grey.Lighten5,
+                //PrimaryContrastText = Colors.Grey.Darken4,
+            },
+
+            LayoutProperties = new LayoutProperties()
+            {
+                //DrawerWidthLeft = "260px",
+                //DrawerWidthRight = "300px"
+            }
+        };
+
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+        => _drawerOpen = !_drawerOpen;
+}
+
+
+<!--
+            <div class="page">
             <div class="sidebar bg-white shadow">
                 <NavMenu />
             </div>
@@ -20,8 +82,4 @@
             </div>
         </div>
         <NotificationComponent />
-    </Authorized>
-    <NotAuthorized>
-        <RedirectToLogin />
-    </NotAuthorized>
-</AuthorizeView>
+-->
