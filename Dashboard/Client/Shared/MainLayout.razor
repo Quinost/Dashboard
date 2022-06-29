@@ -12,17 +12,23 @@
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
                 <WatcherCheckComponent />
                 <MudSpacer />
-                Hi @context.User.Identity.Name
+                <MudText Typo="Typo.subtitle1">Hi <b>@context.User.Identity.Name</b></MudText>
                 <MudIconButton Style="margin-left:10px" Icon="@Icons.Material.Filled.Logout" Color="Color.Primary" Href="/logout">Log out</MudIconButton>
             </MudAppBar>
             <MudDrawer @bind-Open="@_drawerOpen">
-                <MudDrawerHeader>
-                    <MudText Typo="Typo.h5" Class="mt-1">Application</MudText>
+                <MudDrawerHeader Style="display: inline-flex;align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-dashboard" width="30" height="30" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <circle cx="12" cy="13" r="2"></circle>
+                        <line x1="13.45" y1="11.55" x2="15.5" y2="9.5"></line>
+                        <path d="M6.4 20a9 9 0 1 1 11.2 0z"></path>
+                    </svg>
+                    <MudText Typo="Typo.h5" Class="mt-1" Style="margin-left:5px">Dashboard</MudText>
                 </MudDrawerHeader>
                 <NavMenu />
             </MudDrawer>
             <MudMainContent>
-                <div style="padding: 10px">
+                <div style="padding: 20px">
                     @Body
                 </div>
             </MudMainContent>

@@ -1,63 +1,15 @@
 ﻿@page "/"
 @attribute [Authorize]
-<MudGrid>
-    <MudItem xs="3">
-        <MudCard>
-            <MudCardContent>
-                <MudText>Story of the day</MudText>
-                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudItem>
-    <MudItem xs="3">
-        <MudCard>
-            <MudCardContent>
-                <MudText>Story of the day</MudText>
-                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudItem>
-    <MudItem xs="3">
-        <MudCard>
-            <MudCardContent>
-                <MudText>Story of the day</MudText>
-                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudItem>
-    <MudItem xs="3">
-        <MudCard>
-            <MudCardContent>
-                <MudText>Story of the day</MudText>
-                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudItem>
-    <MudItem xs="3">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=3</MudPaper>
-    </MudItem>
-    <MudItem xs="3">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=3</MudPaper>
-    </MudItem>
-    <MudItem xs="3">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=3</MudPaper>
-    </MudItem>
-</MudGrid>
-
-<div class="main-container">
-    <MudCard>
+<MudPaper Class="d-flex flex-row justify-space-around flex-wrap flex-grow-1 gap-4" Elevation="0">
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            Test notifications
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="() => Show()">Primary</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             <MudText>Story of the day</MudText>
             <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
@@ -66,44 +18,40 @@
             <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
         </MudCardActions>
     </MudCard>
-    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <button @onclick="Show" class="btn btn-primary">Test Notification</button>
-        </div>
-    </div>
-    <div class="card text-dark bg-light mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Dark card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Dark card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-dark bg-light mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Light card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-white bg-dark mb-3 shadow rounded card-res">
-        <div class="card-body">
-            <h5 class="card-title">Dark card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-    </div>
-    <div class="card text-dark bg-light mb-3 shadow rounded chart-card-res">
-        <div class="card-body">
-            <Dashboard.Client.Components.Charts.PieChart></Dashboard.Client.Components.Charts.PieChart>
-        </div>
-    </div>
-    <div class="card text-white bg-dark mb-3 shadow rounded chart-card-res">
-        <div class="card-body">
-            <Dashboard.Client.Components.Charts.PieChart></Dashboard.Client.Components.Charts.PieChart>
-        </div>
-    </div>
-</div>
-
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            <MudText>Story of the day</MudText>
+            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            <MudText>Story of the day</MudText>
+            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            <MudText>Story of the day</MudText>
+            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            <MudText>Story of the day</MudText>
+            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudPaper>

@@ -3,7 +3,7 @@
 @inject ITokenProvider TokenProvider
 
 <div class="watcher-check-margin">
-    <span class="@(IsActive ? "span-error" : "span-good")">@Message</span>
+   <MudText Class="@(IsActive ? "span-error" : "span-good")" Typo="Typo.subtitle1">@Message</MudText>
 </div>
 
 @code {
