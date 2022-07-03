@@ -1,7 +1,8 @@
 ﻿@page "/"
 @attribute [Authorize]
+
 <MudPaper Class="d-flex flex-row justify-space-around flex-wrap flex-grow-1 gap-4" Elevation="0">
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             Test notifications
         </MudCardContent>
@@ -9,7 +10,19 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="() => Show()">Primary</MudButton>
         </MudCardActions>
     </MudCard>
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
+        <MudCardContent>
+            <MudSelect T="string" Label="Coffee" AnchorOrigin="Origin.BottomCenter">
+                <MudSelectItem Value="@("Cappuccino")" />
+                <MudSelectItem Value="@("Cafe Latte")" />
+                <MudSelectItem Value="@("Espresso")" />
+            </MudSelect>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             <MudText>Story of the day</MudText>
             <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
@@ -18,7 +31,7 @@
             <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
         </MudCardActions>
     </MudCard>
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             <MudText>Story of the day</MudText>
             <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
@@ -27,7 +40,7 @@
             <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
         </MudCardActions>
     </MudCard>
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             <MudText>Story of the day</MudText>
             <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
@@ -36,16 +49,7 @@
             <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
         </MudCardActions>
     </MudCard>
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
-        <MudCardContent>
-            <MudText>Story of the day</MudText>
-            <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-        </MudCardActions>
-    </MudCard>
-    <MudCard Style="width:18rem;height:13rem;" Elevation="4">
+    <MudCard Class="rounded-lg" Style="width:18rem;height:13rem;" Elevation="4">
         <MudCardContent>
             <MudText>Story of the day</MudText>
             <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>

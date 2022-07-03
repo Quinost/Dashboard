@@ -1,30 +1,31 @@
 ﻿@page "/bugs"
 @attribute [Authorize]
 
-<table class="table shadow">
-    <thead class="table-dark">
-        <tr>
-            <th class="align-middle first-column">
-                <BugFiltrComponent Input="SystemList"  Output="((args) => FilterSelected(args)) "></BugFiltrComponent>
-            </th>
-            <th class="align-middle w-auto">Message</th>
-            <th class="align-middle w-25">System</th>
-            <th class="align-middle date-column">Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <Virtualize @ref="Virtualize" ItemsProvider="LoadBugs" Context="bug" ItemSize="100" OverscanCount="20">
-            <ItemContent>
-                <tr>
-                    <td><button type="button" class="btn btn-sm btn-outline-dark" @onclick=@(() => ShowModal(bug.Id))>@bug.Id</button></td>
-                    <td class="text-break">@bug.Message</td>
-                    <td>@bug.System</td>
-                    <td>@bug.Date</td>
-                </tr>
-            </ItemContent>
-            <Placeholder>
-                <p>Loading bugs...</p>
-            </Placeholder>
-        </Virtualize>
-    </tbody>
-</table>
+<MudTable ServerData="@(new Func<TableState, Task<TableData<BugModel>>>(ServerReload))" @ref="table" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="Id" T="BugModel">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Message" T="BugModel">Message</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="System" T="BugModel">System</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Date" T="BugModel">Date</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Message">@context.Id</MudTd>
+        <MudTd DataLabel="Message">@context.Message</MudTd>
+        <MudTd DataLabel="System">@context.System</MudTd>
+        <MudTd DataLabel="Date">@context.Date</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{10, 50, 100}"  />
+    </PagerContent>
+</MudTable>

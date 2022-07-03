@@ -14,13 +14,13 @@ public class GetBugsQueryHandler : IRequestHandler<GetBugsListQuery, BugsWithCou
     {
         var retVal = new BugsWithCountRead();
         var bugsList = await context.Bugs
-            .OrderByDescending(x => x.Id)
+            .OrderBy(x => x.Id)
             .Skip(request.StartIndex)
             .Take(request.Count)
             .AsNoTracking()
             .ToListAsync();
         retVal.Bugs = mapper.Map<IEnumerable<BugRead>>(bugsList);
-        retVal.TotalCount = await context.Bugs.CountAsync();
+        retVal.TotalCount = await context.Bugs.CountAsync(cancellationToken);
         return retVal;
     }
 }

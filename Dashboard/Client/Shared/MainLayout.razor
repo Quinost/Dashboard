@@ -1,9 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @inject IIdentityService auth
 
-<MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+<MudThemeProvider Theme="Theme" />
 
 <AuthorizeView>
     <Authorized>
@@ -39,8 +39,6 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<MudThemeProvider Theme="Theme" />
-
 @code {
     MudTheme Theme = new MudTheme()
         {
@@ -54,11 +52,10 @@
                 DrawerText = Colors.Grey.Lighten5,
                 //PrimaryContrastText = Colors.Grey.Darken4,
             },
-
             LayoutProperties = new LayoutProperties()
             {
-                //DrawerWidthLeft = "260px",
-                //DrawerWidthRight = "300px"
+                DrawerWidthLeft = "260px",
+                DrawerWidthRight = "300px"
             }
         };
 

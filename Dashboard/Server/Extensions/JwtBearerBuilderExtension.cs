@@ -10,7 +10,7 @@ public static class JwtBearerBuilderExtension
     public static void AddIdentityWithStore(this IServiceCollection services)
     {
         services.AddIdentityCore<UserEntity>()
-            .AddUserStore<Services.Identity.UserStore>();
+            .AddUserStore<UserStore>();
     }
 
     public static void AddJwtBearerToken(this IServiceCollection services, JwtConfig jwtConfig)

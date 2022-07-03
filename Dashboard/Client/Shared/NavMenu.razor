@@ -1,8 +1,10 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Filled.Dashboard">Dashboard</MudNavLink>
     <MudNavLink Href="/bugs" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.BugReport">Bugs</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true" Icon="@Icons.Filled.Settings">
-        <MudNavLink Href="/users"  Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.PeopleAlt">Users</MudNavLink>
-        <MudNavLink Href="/config"  Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Settings">Configuration</MudNavLink>
-    </MudNavGroup>
+    <AuthorizeView Roles="Administrator">
+        <MudNavGroup Title="Settings" Expanded="true" Icon="@Icons.Filled.Settings">
+            <MudNavLink Href="/users" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.PeopleAlt">Users</MudNavLink>
+            <MudNavLink Href="/config" Match="NavLinkMatch.Prefix" Icon="@Icons.Filled.Settings">Configuration</MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
 </MudNavMenu>

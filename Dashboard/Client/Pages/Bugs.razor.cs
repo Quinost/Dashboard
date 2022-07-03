@@ -1,53 +1,64 @@
 ﻿using Dashboard.Shared;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
 using Dashboard.Client.Services.Interfaces;
+using MudBlazor;
+using System.Linq.Expressions;
 
 namespace Dashboard.Client.Pages;
 
 public partial class Bugs
 {
-    [Inject]
-    public IBugsService bugService { get; set; }
+    [Inject] public IBugsService bugService { get; set; }
 
-    public List<string> SystemList { get; set; } = new List<string>();
-    private List<BugModel> BugsList { get; set; } = new List<BugModel>();
-    private List<string> FiltrList { get; set; } = new List<string>();
+    private bool _loading;
+    private IEnumerable<BugModel> BugList = new List<BugModel>();
+    private MudTable<BugModel> table;
+    private int totalItems;
 
-    private Virtualize<BugModel> Virtualize { get; set; }
+    private string search;
 
-    private int TotalCount = 0;
-
-    private async ValueTask<ItemsProviderResult<BugModel>> LoadBugs(ItemsProviderRequest request)
+    private async Task<TableData<BugModel>> ServerReload(TableState state)
     {
-        var req = request.StartIndex + request.Count;
-        if (req > BugsList.Count())
-            await LoadMoreBugs();
+        _loading = true;
 
-        var list = FiltrList.Count == 0 ? BugsList : BugsList.Where(v => FiltrList.Contains(v.System)).ToList();
-        var totalCount = FiltrList.Count == 0 ? TotalCount : list.Count;
+        var data = await bugService.GetPaginatedBugs(state.Page * state.PageSize, state.PageSize);
+        totalItems = data.TotalCount;
+        BugList = data.Bugs.ToList();
 
-        var bugs = list.Skip(request.StartIndex).Take(request.Count);
-        return new ItemsProviderResult<BugModel>(bugs, totalCount);
+        if(!string.IsNullOrWhiteSpace(search))
+            BugList = BugList.Where(x => x.Message.Contains(search));
+
+        Console.WriteLine(state.SortLabel);
+        Console.WriteLine(state.SortDirection);
+
+        if (!string.IsNullOrEmpty(state.SortLabel))
+        {
+            switch (state.SortDirection)
+            {
+                case SortDirection.Ascending:
+                    BugList = BugList.OrderBy(orderBy[state.SortLabel]);
+                    break;
+                case SortDirection.Descending:
+                    BugList = BugList.OrderByDescending(orderBy[state.SortLabel]);
+                    break;
+            }
+        }
+
+        _loading = false;
+        return new TableData<BugModel>() { TotalItems = totalItems, Items = BugList };
     }
 
-    private async Task LoadMoreBugs()
+    public void OnSearch(string val)
     {
-        var bugs = await bugService.GetPaginatedBugs(BugsList.Count(), 200);
-        BugsList.AddRange(bugs.Bugs);
-        TotalCount = bugs.TotalCount;
-        BugsList = BugsList.Distinct().ToList();
-        SystemList.AddRange(BugsList.Select(v => v.System));
-        StateHasChanged();
+        search = val;
+        table.ReloadServerData();
     }
 
-    private void ShowModal(int Id)
+    private Dictionary<string, Func<BugModel, object>> orderBy = new Dictionary<string, Func<BugModel, object>>
     {
-    }
-
-    public async void FilterSelected(List<string> param)
-    {
-        FiltrList = param;
-        await Virtualize.RefreshDataAsync();
-    }
+        {nameof(BugModel.Id), x => x.Id},
+        {nameof(BugModel.System), x => x.System},
+        {nameof(BugModel.Message), x => x.Message},
+        {nameof(BugModel.Date), x => x.Date},
+    };
 }
