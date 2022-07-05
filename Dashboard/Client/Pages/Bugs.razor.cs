@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Components;
 using Dashboard.Client.Services.Interfaces;
 using MudBlazor;
-using System.Linq.Expressions;
 
 namespace Dashboard.Client.Pages;
 
 public partial class Bugs
 {
-    [Inject] public IBugsService bugService { get; set; }
+    [Inject] public IBugsService BugService { get; set; }
 
     private bool _loading;
     private IEnumerable<BugModel> BugList = new List<BugModel>();
@@ -21,12 +20,14 @@ public partial class Bugs
     {
         _loading = true;
 
-        var data = await bugService.GetPaginatedBugs(state.Page * state.PageSize, state.PageSize);
+        var data = await BugService.GetPaginatedBugs(state.Page * state.PageSize, state.PageSize);
         totalItems = data.TotalCount;
         BugList = data.Bugs.ToList();
 
-        if(!string.IsNullOrWhiteSpace(search))
-            BugList = BugList.Where(x => x.Message.Contains(search));
+        if (!string.IsNullOrWhiteSpace(search))
+            BugList = BugList.Where(x => x.Message.Contains(search) ||
+                                         x.System.Contains(search) ||
+                                         x.Id.Equals(search));
 
         Console.WriteLine(state.SortLabel);
         Console.WriteLine(state.SortDirection);
@@ -54,7 +55,7 @@ public partial class Bugs
         table.ReloadServerData();
     }
 
-    private Dictionary<string, Func<BugModel, object>> orderBy = new Dictionary<string, Func<BugModel, object>>
+    private Dictionary<string, Func<BugModel, dynamic>> orderBy = new Dictionary<string, Func<BugModel, dynamic>>
     {
         {nameof(BugModel.Id), x => x.Id},
         {nameof(BugModel.System), x => x.System},

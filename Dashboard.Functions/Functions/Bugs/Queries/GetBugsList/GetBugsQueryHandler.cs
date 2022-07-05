@@ -14,7 +14,7 @@ public class GetBugsQueryHandler : IRequestHandler<GetBugsListQuery, BugsWithCou
     {
         var retVal = new BugsWithCountRead();
         var bugsList = await context.Bugs
-            .OrderBy(x => x.Id)
+            .OrderByDescending(x => x.Id)
             .Skip(request.StartIndex)
             .Take(request.Count)
             .AsNoTracking()

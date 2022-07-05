@@ -12,7 +12,6 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Dashboard.Server.Services.Identity;
-
 public class IdentityService : IIdentityService
 {
     private readonly JwtConfig _jwtConfig;
@@ -49,6 +48,7 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByNameAsync(userName);
         if (user is null)
             return Result.Failed("User not found");
+
         user.RefreshToken = null;
         user.RefreshTokenExpiry = null;
         var retVal = await _userManager.UpdateAsync(user);

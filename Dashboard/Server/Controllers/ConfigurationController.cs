@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers;
-
 [Route("api/configuration")]
 [ApiController]
 [Authorize]
@@ -29,9 +28,11 @@ public class ConfigurationController : ControllerBase
     {
         try
         {
-            ConfigurationModel retVal = new ConfigurationModel();
-            retVal.WatcherWorkerDelayTime = helper.OnDelay(null);
-            retVal.TokenExpirationTime = config.AccessTokenExpiration;
+            ConfigurationModel retVal = new()
+            {
+                WatcherWorkerDelayTime = helper.OnDelay(null),
+                TokenExpirationTime = config.AccessTokenExpiration
+            };
             return Ok(retVal);
         }
         catch (Exception ex)

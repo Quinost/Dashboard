@@ -7,7 +7,6 @@ public class DataContext : DbContext
 {
     public DataContext(DbContextOptions options) : base(options)
     {
-
     }
 
     public DbSet<UserEntity> Users { get; set; }
@@ -30,16 +29,13 @@ public class DataContext : DbContext
     private static void AddBugs(ModelBuilder modelBuilder)
     {
         var list = new List<BugEntity>();
-        int startNumber = 0;
-        for (int i = 1; i < 500; i++)
+        for (int i = 1; i < 70; i++)
         {
-            if (i % 50 == 0)
-                startNumber = i;
             list.Add(new BugEntity
             {
                 Id = i,
                 Message = "Error number: " + i,
-                System = "System number: " + startNumber,
+                System = "System number: " +  Guid.NewGuid(),
                 Date = DateTime.Now
             });
         }

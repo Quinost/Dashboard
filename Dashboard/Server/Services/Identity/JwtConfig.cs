@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace Dashboard.Server.Services.Identity;
-
 public class JwtConfig
 {
     [JsonPropertyName("Secret")]

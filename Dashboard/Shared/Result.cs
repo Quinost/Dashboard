@@ -1,19 +1,12 @@
 ﻿using System.Globalization;
 
 namespace Dashboard.Shared;
-public class Result<T>
+public class Result<T> : ResultBase
 {
     public T RetVal { get; set; }
-    public bool Succeeded { get; protected set; }
 
-    private List<string> _errors = new List<string>();
-
-    public IEnumerable<string> Errors => _errors;
-
-    public static Result<T> Success(T retVal)
-    {
-        return new Result<T> { Succeeded = true, RetVal = retVal };
-    }
+    public static Result<T> Success(T retVal) 
+        => new Result<T> { Succeeded = true, RetVal = retVal };
 
     public static Result<T> Failed(params string[] errors)
     {
@@ -24,25 +17,11 @@ public class Result<T>
         }
         return result;
     }
-
-    public string ErrorToString() => ToString();
-
-    public override string ToString()
-    {
-        return Succeeded ?
-               "Succeeded" :
-               string.Format(CultureInfo.InvariantCulture, "{0} : {1}", "Failed", string.Join(",", Errors.ToList()));
-    }
 }
-public class Result
+public class Result : ResultBase
 {
-    public bool Succeeded { get; protected set; }
-
-    private List<string> _errors = new List<string>();
-
-    public IEnumerable<string> Errors => _errors;
-
-    public static Result Success => new Result() { Succeeded = true };
+    public static Result Success 
+        => new Result() { Succeeded = true };
 
     public static Result Failed(params string[] errors)
     {
@@ -53,13 +32,19 @@ public class Result
         }
         return result;
     }
+}
 
-    public string ErrorToString() => ToString();
+public class ResultBase
+{
 
-    public override string ToString()
-    {
-        return Succeeded ?
-               "Succeeded" :
-               string.Format(CultureInfo.InvariantCulture, "{0} : {1}", "Failed", string.Join(",", Errors.ToList()));
-    }
+    internal List<string> _errors = new();
+    public bool Succeeded { get; protected set; }
+
+    public IEnumerable<string> Errors => _errors;
+
+    public string ErrorToString() 
+        => ToString();
+
+    public override string ToString() 
+        => Succeeded ? "Succeeded" : string.Format(CultureInfo.InvariantCulture, "{0} : {1}", "Failed", string.Join(",", Errors.ToList()));
 }

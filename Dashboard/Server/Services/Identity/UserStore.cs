@@ -4,15 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dashboard.Server.Services.Identity;
-
 public class UserStore : IUserStore<UserEntity>, IUserPasswordStore<UserEntity>, IUserLockoutStore<UserEntity>
 {
     private readonly DataContext _context;
 
-    public UserStore(DataContext context)
-    {
-        _context = context;
-    }
+    public UserStore(DataContext context) 
+        => _context = context;
 
     public void Dispose()
         => _context.Dispose();

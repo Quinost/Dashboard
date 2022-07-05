@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers;
-
 [Route("api/users")]
 [ApiController]
 [Authorize]

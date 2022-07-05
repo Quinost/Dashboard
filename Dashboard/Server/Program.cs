@@ -7,6 +7,7 @@ using Dashboard.Infrastructure.Workers;
 using Dashboard.Server.Extensions;
 using Dashboard.Server.Services.Identity;
 using Dashboard.Server.Services.Interfaces;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -34,17 +35,17 @@ builder.Services.AddHostedService<WatcherWorker>();
 builder.Services.AddHostedService<BlackListWorker>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 builder.Services.AddControllers()
     .AddFluentValidation(opt =>
-    {
+    {       
+        //Only eng
         opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-                    //We dont want use standard validator because now we have FluentValidation
-                    //opt.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-                    opt.DisableDataAnnotationsValidation = true;
-                    //Only eng
-                    opt.LocalizationEnabled = false;
+        //We dont want use standard validator because now we have FluentValidation
+        //opt.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+        opt.DisableDataAnnotationsValidation = true;
     });
+
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();

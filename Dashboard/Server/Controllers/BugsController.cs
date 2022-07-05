@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dashboard.Server.Controllers;
-
 [Route("api/bugs")]
 [ApiController]
 [Authorize]
