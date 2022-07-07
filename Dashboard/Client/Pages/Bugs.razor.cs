@@ -9,7 +9,7 @@ public partial class Bugs
 {
     [Inject] public IBugsService BugService { get; set; }
 
-    private bool _loading;
+    private bool _loading = true;
     private IEnumerable<BugModel> BugList = new List<BugModel>();
     private MudTable<BugModel> table;
     private int totalItems;

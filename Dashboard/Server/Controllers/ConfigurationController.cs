@@ -44,7 +44,7 @@ public class ConfigurationController : ControllerBase
 
     [HttpPost]
     public IActionResult Change([FromBody] ConfigurationModel model)
-    {
+    {    
         helper.OnDelay(model.WatcherWorkerDelayTime);
 
         return Ok();

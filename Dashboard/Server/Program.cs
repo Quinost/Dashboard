@@ -7,6 +7,7 @@ using Dashboard.Infrastructure.Workers;
 using Dashboard.Server.Extensions;
 using Dashboard.Server.Services.Identity;
 using Dashboard.Server.Services.Interfaces;
+using Dashboard.Shared.Validations;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -37,13 +38,17 @@ builder.Services.AddHostedService<BlackListWorker>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers()
     .AddFluentValidation(opt =>
-    {       
+    {
         //Only eng
-        opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        //opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+
         //We dont want use standard validator because now we have FluentValidation
         //opt.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
         opt.DisableDataAnnotationsValidation = true;
     });
+
+builder.Services.AddValidatorsFromAssemblyContaining<RefreshTokenValidator>();
 
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 

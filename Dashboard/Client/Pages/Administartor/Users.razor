@@ -1,29 +1,24 @@
 ﻿@page "/users"
 @attribute [Authorize(Roles = "Administrator")]
 
-
-<table class="table table-hover shadow">
-    <thead class="table-dark">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col" class="username-cell">Username</th>
-            <th scope="col" class="isActive-cell">IsActive</th>
-            <th scope="col">Role</th>
-            <th scope="col">Refresh token</th>
-            <th scope="col">Refresh token expiry</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in UserList)
-        {
-            <tr>
-                <th scope="row">@user.Id</th>
-                <td>@user.Username</td>
-                <td>@user.IsActive</td>
-                <td>@RoleList.FirstOrDefault(v => v.Id == user.RoleId)?.Name</td>
-                <td class="text-truncate">@user.RefreshToken</td>
-                <td>@user.RefreshTokenExpiry</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<MudTable Items="@UserList" Hover="true" SortLabel="Sort By" Loading="@_loading">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<UserModel, object>(x=>x.Id)">Id</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserModel, object>(x=>x.Username)">Username</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserModel, object>(x=>x.IsActive)">Is Active</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserModel, object>(x=>x.RoleId)">Role</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserModel, object>(x=>x.RefreshToken)">Refresh token</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<UserModel, object>(x=>x.RefreshTokenExpiry)">Refresh token expiry</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Username">@context.Username</MudTd>
+        <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+        <MudTd DataLabel="Role">@RoleList.FirstOrDefault(v => v.Id == context.RoleId)?.Name</MudTd>
+        <MudTd DataLabel="Refresh token">@context.RefreshToken</MudTd>
+        <MudTd DataLabel="Refresh token expiry">@context.RefreshTokenExpiry</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{10, 50, 100}" />
+    </PagerContent>
+</MudTable>

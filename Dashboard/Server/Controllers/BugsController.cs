@@ -26,6 +26,7 @@ public class BugsController : ControllerBase
     {
         try
         {
+            Thread.Sleep(4000);
             var bugs = await mediator.Send(new GetBugsListQuery(startIndex, count));
             return Ok(mapper.Map<BugsWithCountModel>(bugs));
         }

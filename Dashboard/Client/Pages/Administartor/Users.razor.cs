@@ -10,9 +10,12 @@ public partial class Users
 
     public List<UserModel> UserList { get; set; } = new List<UserModel>();
     public List<RoleModel> RoleList { get; set; } = new List<RoleModel>();
+    private bool _loading;
     protected override async Task OnInitializedAsync()
     {
+        _loading = true;
         RoleList = await userService.GetRoles();
         UserList = await userService.GetUsers();
+        _loading = false;
     }
 }

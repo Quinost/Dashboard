@@ -1,43 +1,57 @@
 ﻿using Dashboard.Client.Services.Interfaces;
 using Dashboard.Shared;
+using Dashboard.Shared.Validations;
+using FluentValidation;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
+using MudBlazor;
 
 namespace Dashboard.Client.Pages;
 
 public partial class Configuration
 {
-    [Inject]
-    public IConfigurationService configurationService { get; set; }
+    [Inject] public IConfigurationService configurationService { get; set; }
 
-    [Inject]
-    public INotificationService notificationService { get; set; }
+    [Inject] private ISnackbar service { get; set; }
+
+    private MudForm form;
+
+    ConfigurationValidator configurationValidator = new ConfigurationValidator();
 
     private ConfigurationModel configurationModelTemp;
 
-    [Range(0, int.MaxValue, ErrorMessage = "Enter valid integer number")]
-    public string WatcherWorkerDelayTime { get; set; }
-
-    public string AccessTokenExpirationTime { get; set; }
+    private ConfigurationModel model = new ConfigurationModel();
 
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
+    {
+        DownloadData();
+    }
+
+    private async void DownloadData()
     {
         configurationModelTemp = await configurationService.GetConfiguration();
-        WatcherWorkerDelayTime = configurationModelTemp.WatcherWorkerDelayTime.ToString();
-        AccessTokenExpirationTime = configurationModelTemp.TokenExpirationTime.ToString();
+        model = configurationModelTemp;
         StateHasChanged();
     }
 
-    protected async void OnValidSubmit()
+    protected async Task OnSubmit()
     {
-        var confg = new ConfigurationModel()
-        {
-            WatcherWorkerDelayTime = int.Parse(WatcherWorkerDelayTime)
-        };
-        await configurationService.UpdateConfiguration(confg);
-        notificationService.ShowNotification("Configuration updated successfully");
+        await form.Validate();
+
+        if (!form.IsValid)
+            return;
+
+        await configurationService.UpdateConfiguration(model);
+        service.Add("Configuration updated successfully", MudBlazor.Severity.Success);
         configurationModelTemp = await configurationService.GetConfiguration();
-        StateHasChanged();
+        DownloadData();
     }
+
+    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+    {
+        var result = configurationValidator.Validate(ValidationContext<ConfigurationModel>.CreateWithOptions((ConfigurationModel)model, x => x.IncludeProperties(propertyName)));
+        if (result.IsValid)
+            return Array.Empty<string>();
+        return result.Errors.Select(e => e.ErrorMessage);
+    };
 }
