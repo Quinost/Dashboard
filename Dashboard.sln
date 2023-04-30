@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Server", "Dashboard\Server\Dashboard.Server.csproj", "{A805E18C-328E-4D2C-9FB5-A0D7852C3E47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Server", "Old\Dashboard\Server\Dashboard.Server.csproj", "{A805E18C-328E-4D2C-9FB5-A0D7852C3E47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Client", "Dashboard\Client\Dashboard.Client.csproj", "{5F531C96-53BB-4529-B7C9-593CFE526F31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Client", "Old\Dashboard\Client\Dashboard.Client.csproj", "{5F531C96-53BB-4529-B7C9-593CFE526F31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Shared", "Dashboard\Shared\Dashboard.Shared.csproj", "{D9C672FB-10A6-4CA8-9FAB-CA9E677BB084}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Shared", "Old\Dashboard\Shared\Dashboard.Shared.csproj", "{D9C672FB-10A6-4CA8-9FAB-CA9E677BB084}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Functions", "Dashboard.Functions\Dashboard.Functions.csproj", "{5582E993-4EE8-410B-B6A9-59183CD72AFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Functions", "Old\Dashboard.Functions\Dashboard.Functions.csproj", "{5582E993-4EE8-410B-B6A9-59183CD72AFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.Infrastructure", "Dashboard.Infrastructure\Dashboard.Infrastructure.csproj", "{22874CE8-CC4E-4C9D-A315-A402287915AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard.Infrastructure", "Old\Dashboard.Infrastructure\Dashboard.Infrastructure.csproj", "{22874CE8-CC4E-4C9D-A315-A402287915AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Data", "Dashboard.Data\Dashboard.Data.csproj", "{E3A38124-6DEE-4D1C-9F35-8AE4387B42CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Data", "Old\Dashboard.Data\Dashboard.Data.csproj", "{E3A38124-6DEE-4D1C-9F35-8AE4387B42CB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{927C834C-6A64-4C8B-8C27-1D6A042EC88F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A805E18C-328E-4D2C-9FB5-A0D7852C3E47} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
+		{5F531C96-53BB-4529-B7C9-593CFE526F31} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
+		{D9C672FB-10A6-4CA8-9FAB-CA9E677BB084} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
+		{5582E993-4EE8-410B-B6A9-59183CD72AFB} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
+		{22874CE8-CC4E-4C9D-A315-A402287915AE} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
+		{E3A38124-6DEE-4D1C-9F35-8AE4387B42CB} = {927C834C-6A64-4C8B-8C27-1D6A042EC88F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0EE93790-7A48-4985-B28A-6D7F83085818}
